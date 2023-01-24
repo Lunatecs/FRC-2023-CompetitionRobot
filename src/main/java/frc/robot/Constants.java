@@ -36,12 +36,44 @@ public final class Constants {
   */
   }
 
+  public final static class IntakeConstants{
+    public final static int LEFT_MOTOR = 1; // TODO: Find Intake motor and solenoid CAN values
+    public final static int RIGHT_MOTOR = 1;
+
+    public final static int FORWARD_CHANNEL = 1;
+    public final static int REVERSE_CHANNEL = 1;
+  }
+
+  public final static class ElevatorConstants{
+    public final static int ELEVATOR_MOTOR = 1;
+  }
+
+  public final static class ArmConstants {
+    public final static int ARM_MOTOR = 0; // TODO: find the CAN id for arm motor and limit switch (once its attached)
+    public final static int LIMIT_SWITCH = 0;
+  }
+
   public final static class JoystickConstants{
     
     public final static int DRIVER_USB = 0;
     public final static int OPERATOR_USB = 1;
-    public static final int LEFT_Y_AXIS = 1; 
-    public static final int RIGHT_X_AXIS = 4;
-  
+    
+    
+    public final static int LEFT_Y_AXIS = 1;
+    public final static int RIGHT_X_AXIS = 4;
+
+
+    public final static int GREEN_BUTTON = 1;
+    public final static int RED_BUTTON = 2;
+    public final static int YELLOW_BUTTON = 4;
+    public final static int BLUE_BUTTON = 3;
+
+    public final static int LEFT_TRIGGER = 2;
+    public final static int RIGHT_TRIGGER = 3;
+    public final static int LEFT_BUMPER = 5;
+    public final static int RIGHT_BUMPER = 6;
+
+    public final static int BACK_BUTTON = 7;
+    public static final int START_BUTTON = 8;
   }
 }

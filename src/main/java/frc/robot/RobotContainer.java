@@ -11,12 +11,18 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LooneyDriveCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -27,7 +33,9 @@ import edu.wpi.first.cameraserver.CameraServer;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
+  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final IntakeSubsystem intakesubsystem = new IntakeSubsystem();
 
 
 
@@ -69,10 +77,22 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-  }
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(.5), elevatorSubsystem))
+                                                                              .onFalse(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(0), elevatorSubsystem));
+    
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(-0.5), elevatorSubsystem))
+                                                                              .onFalse(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(0), elevatorSubsystem));
+    
+  
+    new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new RunCommand(() -> {intakesubsystem.runIntake(0.3); intakesubsystem.intakeClose();}, intakesubsystem))
+                                                                       .onFalse(new RunCommand(() -> {intakesubsystem.runIntake(0); intakesubsystem.intakeOpen();}, intakesubsystem));
+  
+    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new RunCommand(() -> intakesubsystem.runIntake(0.3), intakesubsystem))
+                                                                      .onFalse(new RunCommand(() -> intakesubsystem.runIntake(0), intakesubsystem));
+                                                
+}
+
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
