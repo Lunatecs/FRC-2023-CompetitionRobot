@@ -76,4 +76,8 @@ public final class Constants {
     public final static int BACK_BUTTON = 7;
     public static final int START_BUTTON = 8;
   }
+
+  public final static class WristConstants{
+    public final static int WRIST_MOTOR = 0; //TODO: find the CAN id for wrist motor
+  }
 }
