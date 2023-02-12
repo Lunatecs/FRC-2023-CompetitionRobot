@@ -19,7 +19,7 @@ public final class Constants {
     public final static int RIGHT_FRONT = 3;
     public final static int RIGHT_BACK = 1;
 
-    public final static int PIGEON = 6;
+    public final static int PIGEON = 6; // TODO: Update
 
 
 
@@ -45,12 +45,12 @@ public final class Constants {
   }
 
   public final static class ElevatorConstants{
-    public final static int ELEVATOR_MOTOR = 1;
+    public final static int ELEVATOR_MOTOR = 5;
   }
 
   public final static class ArmConstants {
-    public final static int ARM_MOTOR = 0; // TODO: find the CAN id for arm motor and limit switch (once its attached)
-    public final static int LIMIT_SWITCH = 0;
+    public final static int ARM_MOTOR = 8;
+    public final static int LIMIT_SWITCH = 8;
   }
 
   public final static class JoystickConstants{
@@ -78,6 +78,6 @@ public final class Constants {
   }
 
   public final static class WristConstants{
-    public final static int WRIST_MOTOR = 0; //TODO: find the CAN id for wrist motor
+    public final static int WRIST_MOTOR = 6;
   }
 }
