@@ -30,7 +30,11 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void setArmSpeed(double speed) {
-    armMotor.set(ControlMode.PercentOutput, speed);
+    if(limitSwitch.get() && speed < 0) {
+      armMotor.set(ControlMode.PercentOutput, 0);
+    }else {
+      armMotor.set(ControlMode.PercentOutput, speed);
+    }
   }
 
   public double getArmEncoder() {
