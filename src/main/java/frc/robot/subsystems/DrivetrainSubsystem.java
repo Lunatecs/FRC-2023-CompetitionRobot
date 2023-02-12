@@ -59,9 +59,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
     drive.curvatureDrive(speed*-1.0, rotation*-1.0, turnInPlace);
   }
 
-  public void voltageTankDrive(double leftVolts, double rightVolts) { // why did you put this here nikhil
-    rightFront.setVoltage(rightVolts);                                // we really didnt need this
-    leftFront.setVoltage(leftVolts);                                  // it is used absolutely nowhere
+  public void voltageTankDrive(double leftVolts, double rightVolts) {
+    rightFront.setVoltage(rightVolts);                              
+    leftFront.setVoltage(leftVolts);                                 
     drive.feed();
   }
 
