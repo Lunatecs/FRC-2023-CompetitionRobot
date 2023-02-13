@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
-  TalonFX wristmotor = new WPI_TalonFX(WristConstants.WRIST_MOTOR);
+  TalonFX rizzmotor = new WPI_TalonFX(WristConstants.WRIST_MOTOR);
 
   public WristSubsystem() {
-    wristmotor.configFactoryDefault();
+    rizzmotor.configFactoryDefault();
   }
 
   @Override
@@ -24,6 +24,6 @@ public class WristSubsystem extends SubsystemBase {
   }
 
   public void turnWrist(double rotation){
-    wristmotor.set(ControlMode.PercentOutput, rotation);
+    rizzmotor.set(ControlMode.PercentOutput, rotation);
   }
 }

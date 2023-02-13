@@ -82,12 +82,8 @@ public class RobotContainer {
     
     new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(-0.5), elevatorSubsystem))
                                                                               .onFalse(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(0), elevatorSubsystem));
-    
   
-    new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new RunCommand(() -> {intakesubsystem.runIntake(0.3); intakesubsystem.intakeClose();}, intakesubsystem))
-                                                                       .onFalse(new RunCommand(() -> {intakesubsystem.runIntake(0); intakesubsystem.intakeOpen();}, intakesubsystem));
-  
-    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new RunCommand(() -> intakesubsystem.runIntake(0.3), intakesubsystem))
+    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new RunCommand(() -> intakesubsystem.runIntake(1.0), intakesubsystem))
                                                                       .onFalse(new RunCommand(() -> intakesubsystem.runIntake(0), intakesubsystem));
                                                 
 }

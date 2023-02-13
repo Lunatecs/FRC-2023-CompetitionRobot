@@ -37,8 +37,8 @@ public final class Constants {
   }
 
   public final static class IntakeConstants{
-    public final static int LEFT_MOTOR = 1; // TODO: Find Intake motor and solenoid CAN values
-    public final static int RIGHT_MOTOR = 1;
+    public final static int LEFT_MOTOR = 1; // not used
+    public final static int RIGHT_MOTOR = 12;
 
     public final static int FORWARD_CHANNEL = 1;
     public final static int REVERSE_CHANNEL = 1;
