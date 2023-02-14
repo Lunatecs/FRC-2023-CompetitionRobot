@@ -14,7 +14,9 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.WristSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -32,11 +34,11 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final IntakeSubsystem intakesubsystem = new IntakeSubsystem();
-
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final WristSubsystem wrist = new WristSubsystem();
 
 
 
@@ -58,9 +60,11 @@ public class RobotContainer {
 
   public void configureDefaultCommands() {
     // add keybinds for turnInPlace, fast, and reverse
-    drivetrainSubsystem.setDefaultCommand(new LooneyDriveCommand(drivetrainSubsystem,
+    drivetrain.setDefaultCommand(new LooneyDriveCommand(drivetrain,
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_Y_AXIS);}, 
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, () -> {return false;}, () -> {return false;}, () -> {return false;}));
+  
+    wrist.setDefaultCommand(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)));
   }
 
   /**
@@ -77,16 +81,26 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(.5), elevatorSubsystem))
-                                                                              .onFalse(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(0), elevatorSubsystem));
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new RunCommand(() -> elevator.setElevatorSpeed(.5), elevator))
+                                                                              .onFalse(new RunCommand(() -> elevator.setElevatorSpeed(0), elevator));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(-0.5), elevatorSubsystem))
-                                                                              .onFalse(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(0), elevatorSubsystem));
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new RunCommand(() -> elevator.setElevatorSpeed(-0.5), elevator))
+                                                                              .onFalse(new RunCommand(() -> elevator.setElevatorSpeed(0), elevator));
   
-    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new RunCommand(() -> intakesubsystem.runIntake(1.0), intakesubsystem))
-                                                                      .onFalse(new RunCommand(() -> intakesubsystem.runIntake(0), intakesubsystem));
-                                                
-}
+    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(1.0), intake)))
+                                                                      .onFalse(new RepeatCommand(new RunCommand(() -> intake.runIntake(0), intake)));
+    
+    new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(-1.0), intake)))
+                                                                      .onFalse(new RepeatCommand(new RunCommand(() -> intake.runIntake(0), intake)));
+  
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(-driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)), intake)))
+                                                                                                         .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
+
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)), intake)))
+                                                                                                          .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
+    
+  
+  }
 
 
 

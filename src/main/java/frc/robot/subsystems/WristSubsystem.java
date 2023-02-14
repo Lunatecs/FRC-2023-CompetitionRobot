@@ -5,9 +5,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
 
@@ -16,14 +18,19 @@ public class WristSubsystem extends SubsystemBase {
 
   public WristSubsystem() {
     rizzmotor.configFactoryDefault();
+    rizzmotor.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("wrist encoder", getWristEncoder());
   }
 
   public void turnWrist(double rotation){
     rizzmotor.set(ControlMode.PercentOutput, rotation);
+  }
+
+  public double getWristEncoder() {
+    return rizzmotor.getSelectedSensorPosition();
   }
 }
