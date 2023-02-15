@@ -46,6 +46,7 @@ public final class Constants {
 
   public final static class ElevatorConstants{
     public final static int ELEVATOR_MOTOR = 5;
+    public static final int LIMIT_SWITCH = 9;
   }
 
   public final static class ArmConstants {

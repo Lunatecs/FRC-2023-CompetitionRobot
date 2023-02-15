@@ -4,15 +4,19 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 
 
 public class ElevatorSubsystem extends SubsystemBase {
   private WPI_TalonFX elevatorMotor = new WPI_TalonFX(ElevatorConstants.ELEVATOR_MOTOR);
+  private final DigitalInput elevatorJawn = new DigitalInput(ElevatorConstants.LIMIT_SWITCH);
 
 
   public ElevatorSubsystem() {
@@ -23,10 +27,17 @@ public class ElevatorSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("elevator encoder", getElevatorEncoder());
+    SmartDashboard.putBoolean("elevator limit switch", elevatorJawn.get());
   }
 
   public void setElevatorSpeed(double speed) {
-    elevatorMotor.set(speed);
+    if(elevatorJawn.get() && speed < 0) {
+      elevatorMotor.set(ControlMode.PercentOutput, 0);
+      elevatorMotor.setSelectedSensorPosition(0);
+    }else {
+      elevatorMotor.set(ControlMode.PercentOutput, speed);
+    }
   }
 
   public double getElevatorEncoder() {

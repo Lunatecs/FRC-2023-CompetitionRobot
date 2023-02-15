@@ -10,6 +10,8 @@ import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LooneyDriveCommand;
+import frc.robot.commands.RunIntakeCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -39,6 +41,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final WristSubsystem wrist = new WristSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
 
 
 
@@ -81,10 +84,10 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new RunCommand(() -> elevator.setElevatorSpeed(.5), elevator))
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).whileTrue(new RunCommand(() -> elevator.setElevatorSpeed(.5), elevator))
                                                                               .onFalse(new RunCommand(() -> elevator.setElevatorSpeed(0), elevator));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new RunCommand(() -> elevator.setElevatorSpeed(-0.5), elevator))
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).whileTrue(new RunCommand(() -> elevator.setElevatorSpeed(-0.5), elevator))
                                                                               .onFalse(new RunCommand(() -> elevator.setElevatorSpeed(0), elevator));
   
     new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(1.0), intake)))
@@ -93,12 +96,17 @@ public class RobotContainer {
     new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(-1.0), intake)))
                                                                       .onFalse(new RepeatCommand(new RunCommand(() -> intake.runIntake(0), intake)));
   
-    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(-driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)), intake)))
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake))
                                                                                                          .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
 
-    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).whileTrue(new RepeatCommand(new RunCommand(() -> intake.runIntake(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)), intake)))
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake))
                                                                                                           .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
     
+    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(-.4), arm)))
+                                                                      .onFalse(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(0), arm)));
+    
+    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(.4), arm)))
+                                                                      .onFalse(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(0), arm)));
   
   }
 
