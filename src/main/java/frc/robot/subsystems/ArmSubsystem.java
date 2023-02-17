@@ -33,7 +33,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public void setArmSpeed(double speed) {
-    if(armJawn.get() && speed < 0) {
+    if(!armJawn.get() && speed < 0) {
       armMotor.set(ControlMode.PercentOutput, 0);
       armMotor.setSelectedSensorPosition(0);
     }else {

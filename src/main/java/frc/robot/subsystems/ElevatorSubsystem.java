@@ -28,15 +28,15 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("elevator encoder", getElevatorEncoder());
-    SmartDashboard.putBoolean("elevator limit switch", elevatorJawn.get());
+    SmartDashboard.putBoolean("Red = Bottom", elevatorJawn.get());
   }
 
   public void setElevatorSpeed(double speed) {
-    if(elevatorJawn.get() && speed < 0) {
+    if(!elevatorJawn.get() && speed < 0) {
       elevatorMotor.set(ControlMode.PercentOutput, 0);
       elevatorMotor.setSelectedSensorPosition(0);
     }else {
-      elevatorMotor.set(ControlMode.PercentOutput, speed);
+      elevatorMotor.set(ControlMode.PercentOutput, -speed);
     }
   }
 
