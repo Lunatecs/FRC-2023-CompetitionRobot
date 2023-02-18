@@ -23,6 +23,7 @@ import frc.robot.utils.SetPointSupplier;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -122,6 +123,11 @@ public class RobotContainer {
                                                                         .onFalse(new InstantCommand(() -> {}, wrist));
 
     //new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new PrintCommand(led.printQueue()));
+
+    new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).toggleOnTrue(new RunCommand(() -> led.addColor(led.INTAKE_CUBE), led))
+                                                                      .toggleOnFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CUBE), led));
+                                                                                                                                              
+
   }
 
 
