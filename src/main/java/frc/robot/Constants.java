@@ -83,7 +83,8 @@ public final class Constants {
   }
 
   public final static class LEDConstants {
-    public final static int LED_Channel = 0;
+    public final static int LED_FRONT = 0;
+    public final static int LED_BACK = 1;
 
     public final static double STROBE_GOLD = -0.07;
     public final static double STROBE_BLUE = -0.09;
