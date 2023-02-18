@@ -81,4 +81,18 @@ public final class Constants {
   public final static class WristConstants{
     public final static int WRIST_MOTOR = 6;
   }
+
+  public final static class LEDConstants {
+    public final static int LED_Channel = 0;
+
+    public final static double STROBE_GOLD = -0.07;
+    public final static double STROBE_BLUE = -0.09;
+    public final static double FIRE_MED =  -0.59;
+    public final static double SOLID_GREEN = 0.71;
+    public final static double CONFETTI = -0.87;
+  }
+
+  /*public static enum LEDModes { (Temporarily commented out until we get the enum to work properly.)
+    YELLOW, PURPLE, PARTY_MODE
+  }*/
 }

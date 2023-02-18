@@ -24,6 +24,7 @@ public class WristSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("wrist encoder", getWristEncoder());
+    SmartDashboard.putNumber("Wrist Current", rizzMotor.getStatorCurrent());
   }
 
   public void turnWrist(double rotation){
@@ -32,5 +33,12 @@ public class WristSubsystem extends SubsystemBase {
 
   public double getWristEncoder() {
     return rizzMotor.getSelectedSensorPosition();
+  }
+
+  public boolean tripLimit() {
+    if(rizzMotor.getStatorCurrent() > 50) {
+      return true;
+    }
+    return false;
   }
 }

@@ -26,11 +26,16 @@ public class WristBrakeCommand extends PIDCommand {
         // This should return the measurement
         () -> wrist.getWristEncoder(),
         // This should return the setpoint (can also be a constant)
-        setpoint,
+          setpoint,
         // This uses the output
         output -> {
           // Use the output here
-          wrist.turnWrist(output);
+          if(wrist.tripLimit() && output < 0) {
+            wrist.turnWrist(0);
+          } else {
+            wrist.turnWrist(output);
+          }
+          
         });
 
         this.wrist = wrist;
@@ -51,6 +56,10 @@ public class WristBrakeCommand extends PIDCommand {
   public void execute() {
     SmartDashboard.putNumber("wrist error", this.getController().getPositionError());
     SmartDashboard.putNumber("Setpoint", setpoint.getAsDouble());
+    SmartDashboard.putBoolean("Trippin Bawls", wrist.tripLimit());
+    if (wrist.tripLimit()) {
+      setpoint.setSetPoint(setpoint.getAsDouble()-200);
+    }
     super.execute();
   }
 

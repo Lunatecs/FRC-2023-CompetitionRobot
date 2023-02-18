@@ -17,12 +17,14 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.utils.SetPointSupplier;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -45,11 +47,15 @@ public class RobotContainer {
   private final IntakeSubsystem intake = new IntakeSubsystem();
   private final WristSubsystem wrist = new WristSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
+  private final LEDSubsystem led = LEDSubsystem.getInstance();
 
 
 
   private final Joystick driverJoystick = new Joystick(Constants.JoystickConstants.DRIVER_USB);
   private final Joystick operatorJoystick = new Joystick(Constants.JoystickConstants.OPERATOR_USB);
+
+  boolean isCone = true;
+  boolean isCube = false;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController =
@@ -70,6 +76,8 @@ public class RobotContainer {
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_Y_AXIS);}, 
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, () -> {return false;}, () -> {return false;}, () -> {return false;}));
   
+    led.setDefaultCommand(new PrintCommand(led.printQueue()));
+
     //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
   }
 
@@ -83,6 +91,7 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
@@ -110,6 +119,7 @@ public class RobotContainer {
     new Trigger(() -> {return Math.abs(operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)) > 0.2;}).whileTrue(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)))
                                                                                                             //.onFalse(new RunCommand(() -> wrist.turnWrist(0), wrist));
                                                                                                             .onFalse(new WristBrakeCommand(new SetPointSupplier(), wrist));
+    
     new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new WristBrakeCommand(new SetPointSupplier(), wrist))
                                                                         .onFalse(new InstantCommand(() -> {}, wrist));
   }
