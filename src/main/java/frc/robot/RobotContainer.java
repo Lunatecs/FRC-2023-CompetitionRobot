@@ -11,6 +11,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LooneyDriveCommand;
 import frc.robot.commands.RunIntakeCommand;
+//import frc.robot.commands.ToggleLED;
 import frc.robot.commands.WristBrakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -54,9 +55,9 @@ public class RobotContainer {
 
   private final Joystick driverJoystick = new Joystick(Constants.JoystickConstants.DRIVER_USB);
   private final Joystick operatorJoystick = new Joystick(Constants.JoystickConstants.OPERATOR_USB);
+  private final Joystick testJoystick = new Joystick(JoystickConstants.TEST_USB);
 
-  boolean isCone = true;
-  boolean isCube = false;
+  boolean isCone = false;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController =
@@ -77,6 +78,7 @@ public class RobotContainer {
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_Y_AXIS);}, 
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, () -> {return false;}, () -> {return false;}, () -> {return false;}));
 
+    //led.setDefaultCommand(new ToggleLED(led));
     //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
   }
 
@@ -124,10 +126,29 @@ public class RobotContainer {
 
     //new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new PrintCommand(led.printQueue()));
 
-    new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).toggleOnTrue(new RunCommand(() -> led.addColor(led.INTAKE_CUBE), led))
-                                                                      .toggleOnFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CUBE), led));
-                                                                                                                                              
+  
+    //new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).toggleOnTrue(new RunCommand(() -> led.addColor(led.INTAKE_CONE), led));
+                                                                        //.toggleOnFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CONE), led));                                                             
 
+    // some test code rn dont worry
+    new JoystickButton(testJoystick, JoystickConstants.BACK_BUTTON)
+                      .onTrue(new RunCommand(() -> {
+                        led.removeColor(led.INTAKE_CONE);
+                        if(!led.queueContains(led.INTAKE_CUBE)) {
+                          led.addColor(led.INTAKE_CUBE);
+                        }
+                      }, led));
+
+    new JoystickButton(testJoystick, JoystickConstants.START_BUTTON)
+                      .onTrue(new RunCommand(() -> {
+                        led.removeColor(led.INTAKE_CUBE);
+                        if(!led.queueContains(led.INTAKE_CONE)) {
+                          led.addColor(led.INTAKE_CONE);
+                        }
+                      }, led));
+    
+
+    new JoystickButton(testJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new PrintCommand(led.printQueue())); 
   }
 
 
@@ -141,4 +162,5 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
   }
-}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+

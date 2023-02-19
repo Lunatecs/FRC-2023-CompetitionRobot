@@ -19,7 +19,7 @@ public class LEDSubsystem extends SubsystemBase {
 
   public final PriorityColor DEFAULT = new PriorityColor(LEDConstants.FIRE_MED, 100, "fire");
   public final PriorityColor BALANCED = new PriorityColor(LEDConstants.CONFETTI, 20, "party");
-  public final PriorityColor INTAKE_CONE = new PriorityColor(LEDConstants.STROBE_GOLD, 30, "cone");
+  public final PriorityColor INTAKE_CONE = new PriorityColor(LEDConstants.STROBE_GOLD, 31, "cone"); // 30
   public final PriorityColor INTAKE_CUBE = new PriorityColor(LEDConstants.STROBE_BLUE, 30, "cube");
   public final PriorityColor PICKED_UP = new PriorityColor(LEDConstants.SOLID_GREEN, 25, "picked up");
 
@@ -27,6 +27,11 @@ public class LEDSubsystem extends SubsystemBase {
   private LEDSubsystem() {
     queue = new PriorityQueue<PriorityColor>(new PriorityColor());
     addDefaultColor();
+    
+  }
+
+  public boolean queueContains(PriorityColor color) {
+    return queue.contains(color);
   }
 
   public static LEDSubsystem getInstance() {

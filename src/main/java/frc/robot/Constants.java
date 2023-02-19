@@ -58,7 +58,7 @@ public final class Constants {
     
     public final static int DRIVER_USB = 0;
     public final static int OPERATOR_USB = 1;
-    
+    public final static int TEST_USB = 2;
     
     public final static int LEFT_Y_AXIS = 1;
     public final static int RIGHT_X_AXIS = 4;
@@ -75,7 +75,7 @@ public final class Constants {
     public final static int RIGHT_BUMPER = 6;
 
     public final static int BACK_BUTTON = 7;
-    public static final int START_BUTTON = 8;
+    public final static int START_BUTTON = 8;
   }
 
   public final static class WristConstants{
