@@ -4,11 +4,13 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.ArcadeDriveCommand;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LockElevatorCommand;
 import frc.robot.commands.LooneyDriveCommand;
 import frc.robot.commands.RunIntakeCommand;
 //import frc.robot.commands.ToggleLED;
@@ -31,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
@@ -97,11 +100,18 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setElevatorSpeed(1), elevator)))
-                                                                              .onFalse(new RunCommand(() -> elevator.setElevatorSpeed(0), elevator));
+    new JoystickButton(operatorJoystick, JoystickConstants.POV_UP).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setElevatorSpeed(-1, ElevatorConstants.MAX_HEIGHT), elevator)))
+                                                                              //.onFalse(new LockElevatorCommand(new SetPointSupplier(), elevator));
+                                                                              .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setElevatorSpeed(-1), elevator)))
-                                                                              .onFalse(new RunCommand(() -> elevator.setElevatorSpeed(0), elevator));
+    new JoystickButton(operatorJoystick, JoystickConstants.POV_DOWN).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setElevatorSpeed(1, 0), elevator)))
+                                                                              .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
+    
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON);
+
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON);
+
+    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON);
   
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake))
                                                                                                          .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
@@ -109,10 +119,10 @@ public class RobotContainer {
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake))
                                                                                                           .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(-.8), arm)))
+    new JoystickButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(-.8), arm)))
                                                                       .onFalse(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(0), arm)));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(.8), arm)))
+    new JoystickButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(.8), arm)))
                                                                       .onFalse(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(0), arm)));
 
     //new JoystickButton(operatorJoystick, JoystickConstants.LEFT_Y_AXIS).whileTrue(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)))
@@ -134,17 +144,13 @@ public class RobotContainer {
     new JoystickButton(testJoystick, JoystickConstants.BACK_BUTTON)
                       .onTrue(new RunCommand(() -> {
                         led.removeColor(led.INTAKE_CONE);
-                        if(!led.queueContains(led.INTAKE_CUBE)) {
-                          led.addColor(led.INTAKE_CUBE);
-                        }
+                        led.addColor(led.INTAKE_CUBE);
                       }, led));
 
     new JoystickButton(testJoystick, JoystickConstants.START_BUTTON)
                       .onTrue(new RunCommand(() -> {
                         led.removeColor(led.INTAKE_CUBE);
-                        if(!led.queueContains(led.INTAKE_CONE)) {
-                          led.addColor(led.INTAKE_CONE);
-                        }
+                        led.addColor(led.INTAKE_CONE);
                       }, led));
     
 

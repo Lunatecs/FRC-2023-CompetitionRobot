@@ -47,6 +47,8 @@ public final class Constants {
   public final static class ElevatorConstants{
     public final static int ELEVATOR_MOTOR = 5;
     public static final int LIMIT_SWITCH = 9;
+    public static final int MAX_HEIGHT = -300000;//314334
+    public static final int MID_HEIGHT = -234000; //-234153
   }
 
   public final static class ArmConstants {
@@ -76,6 +78,11 @@ public final class Constants {
 
     public final static int BACK_BUTTON = 7;
     public final static int START_BUTTON = 8;
+
+    public final static int POV_UP = 0;
+    public final static int POV_RIGHT = 90;
+    public final static int POV_DOWN = 180;
+    public final static int POV_LEFT = 270;
   }
 
   public final static class WristConstants{

@@ -108,4 +108,19 @@ public class DrivetrainSubsystem extends SubsystemBase {
     rightFront.setSelectedSensorPosition(0.0);
     leftFront.setSelectedSensorPosition(0.0);
   }
+
+  public void coastMode(boolean coast) {
+    if(coast) {
+      leftFront.setNeutralMode(NeutralMode.Coast);
+      leftBack.setNeutralMode(NeutralMode.Coast);
+      rightFront.setNeutralMode(NeutralMode.Coast);
+      rightBack.setNeutralMode(NeutralMode.Coast);
+      return;
+    }
+    leftFront.setNeutralMode(NeutralMode.Brake);
+    leftBack.setNeutralMode(NeutralMode.Brake);
+    rightFront.setNeutralMode(NeutralMode.Brake);
+    rightBack.setNeutralMode(NeutralMode.Brake);
+  }
+
 }
