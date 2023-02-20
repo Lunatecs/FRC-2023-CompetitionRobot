@@ -13,6 +13,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockElevatorCommand;
 import frc.robot.commands.LooneyDriveCommand;
 import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.SetElevatorPositionCommand;
 //import frc.robot.commands.ToggleLED;
 import frc.robot.commands.WristBrakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -55,11 +56,11 @@ public class RobotContainer {
   private final LEDSubsystem led = LEDSubsystem.getInstance();
 
 
-
   private final Joystick driverJoystick = new Joystick(Constants.JoystickConstants.DRIVER_USB);
   private final Joystick operatorJoystick = new Joystick(Constants.JoystickConstants.OPERATOR_USB);
   private final Joystick testJoystick = new Joystick(JoystickConstants.TEST_USB);
 
+  private SetPointSupplier elevatorSetpoint = new SetPointSupplier();
   boolean isCone = false;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -79,7 +80,7 @@ public class RobotContainer {
     // add keybinds for turnInPlace, fast, and reverse
     drivetrain.setDefaultCommand(new LooneyDriveCommand(drivetrain,
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_Y_AXIS);}, 
-    () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, () -> {return false;}, () -> {return false;}, () -> {return false;}));
+    () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, () -> driverJoystick.getRawButton(JoystickConstants.RIGHT_BUMPER), () -> {return false;}, () -> {return false;}));
 
     //led.setDefaultCommand(new ToggleLED(led));
     //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
@@ -100,18 +101,21 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.POV_UP).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setElevatorSpeed(-1, ElevatorConstants.MAX_HEIGHT), elevator)))
+    new POVButton(operatorJoystick, JoystickConstants.POV_UP).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setManualSpeed(-1), elevator)))
                                                                               //.onFalse(new LockElevatorCommand(new SetPointSupplier(), elevator));
                                                                               .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.POV_DOWN).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setElevatorSpeed(1, 0), elevator)))
+    new POVButton(operatorJoystick, JoystickConstants.POV_DOWN).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setManualSpeed(1), elevator)))
                                                                               .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
-    
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON);
 
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON);
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.BOTTOM, 0.0))
+                                                                        .onFalse(new InstantCommand(() -> {}, elevator));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON);
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.0))
+                                                                          .onFalse(new InstantCommand(() -> {}, elevator));
+
+    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.MID_HEIGHT, 0.0))
+                                                                        .onFalse(new InstantCommand(() -> {}, elevator));
   
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake))
                                                                                                          .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
@@ -119,11 +123,11 @@ public class RobotContainer {
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake))
                                                                                                           .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(-.8), arm)))
-                                                                      .onFalse(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(0), arm)));
+    new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(-.8), arm)))
+                                                                      .onFalse(new RunCommand(() -> arm.setArmSpeed(0), arm));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(.8), arm)))
-                                                                      .onFalse(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(0), arm)));
+    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setArmSpeed(.8), arm)))
+                                                                      .onFalse(new RunCommand(() -> arm.setArmSpeed(0), arm));
 
     //new JoystickButton(operatorJoystick, JoystickConstants.LEFT_Y_AXIS).whileTrue(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)))
     //

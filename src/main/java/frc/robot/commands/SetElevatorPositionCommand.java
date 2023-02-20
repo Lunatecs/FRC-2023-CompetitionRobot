@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
@@ -13,41 +15,33 @@ import frc.robot.utils.SetPointSupplier;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class LockElevatorCommand extends PIDCommand {
-  SetPointSupplier setpoint;
+public class SetElevatorPositionCommand extends PIDCommand {
   ElevatorSubsystem elevator;
-
-  /** Creates a new LockElevatorCommand. */
-  public LockElevatorCommand(SetPointSupplier setpoint, ElevatorSubsystem elevator) {
+  public SetElevatorPositionCommand(ElevatorSubsystem elevator, double setpoint, double i) {
     super(
         // The controller that the command will use
-        new PIDController(0.0001, 0, 0),
+        new PIDController(0.0001, i, 0),
         // This should return the measurement
         () -> elevator.getElevatorEncoder(),
         // This should return the setpoint (can also be a constant)
-        setpoint,
+        () -> setpoint,
         // This uses the output
         output -> {
-          // Use the output here
-          elevator.setManualSpeed(output); //TODO: update position later
+          elevator.setSpeed(output);
         });
-    
-    addRequirements(elevator);
-    this.setpoint = setpoint;
-    this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
   }
 
   @Override
   public void initialize() {
-    setpoint.setSetPoint(elevator.getElevatorEncoder());
-    super.initialize();
+    this.getController().setTolerance(500);
   }
 
   @Override
   public void execute() {
-    SmartDashboard.putNumber("elevator error", this.getController().getPositionError());
+    SmartDashboard.putNumber("Elevator Error", this.getController().getPositionError());
+    SmartDashboard.putNumber("Elevator Tolerance", this.getController().getPositionTolerance());
     super.execute();
   }
 

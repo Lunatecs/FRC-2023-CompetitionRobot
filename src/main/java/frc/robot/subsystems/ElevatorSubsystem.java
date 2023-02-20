@@ -40,8 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
   }
 
-  public void setElevatorSpeed(double speed, int pos) {
-
+  public void setManualSpeed(double speed) {
     if(speed > 0) { //If elevator is going down...
       pidController.setSetpoint(0);
       elevatorMotor.set(ControlMode.PercentOutput, pidController.calculate(getElevatorEncoder()));
@@ -63,6 +62,10 @@ public class ElevatorSubsystem extends SubsystemBase {
      *    set speed to 0 if continue going down
      */
 
+  }
+
+  public void setSpeed(double speed) {
+    elevatorMotor.set(ControlMode.PercentOutput, speed);
   }
 
   public void lockElevator() {
