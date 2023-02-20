@@ -14,7 +14,7 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
  
-  private WPI_TalonSRX intakeMotor = new WPI_TalonSRX(IntakeConstants.RIGHT_MOTOR);
+  private WPI_TalonSRX intakeMotor = new WPI_TalonSRX(IntakeConstants.INTAKE_MOTOR);
 
   /*private final DoubleSolenoid frontIntake = new DoubleSolenoid(
     PneumaticsModuleType.REVPH, 

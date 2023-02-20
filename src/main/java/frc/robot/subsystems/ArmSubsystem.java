@@ -6,8 +6,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
+import com.ctre.phoenix.sensors.SensorTimeBase;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,35 +24,67 @@ public class ArmSubsystem extends SubsystemBase {
    * (The arm is what moves the intake back and forth)
   */
   private final WPI_TalonSRX armMotor = new WPI_TalonSRX(ArmConstants.ARM_MOTOR);
-  private final DigitalInput armJawn = new DigitalInput(ArmConstants.LIMIT_SWITCH);
+  private final DigitalInput armLimitSwitch = new DigitalInput(ArmConstants.LIMIT_SWITCH);
+  private final CANCoder armEncoder = new CANCoder(ArmConstants.ARM_ENCODER);
+  //private PIDController pidController = null;
 
   public ArmSubsystem() {
     armMotor.configFactoryDefault();
     armMotor.setNeutralMode(NeutralMode.Brake);
+    armEncoder.configFactoryDefault();
+    CANCoderConfiguration config = new CANCoderConfiguration();
+    armEncoder.configAllSettings(config);
+    armEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10);
+    //pidController = new PIDController(0.0001, 0.0, 0.0);
+    //pidController.setTolerance(500);  
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("arm encoder", getArmEncoder());
-    SmartDashboard.putBoolean("arm limit switch", getArmJawn());
+    SmartDashboard.putBoolean("arm limit switch", getArmLimitSwitch());
+    SmartDashboard.putBoolean("Arm: Red = Bottom", armLimitSwitch.get());
+    
+
+   // if(!armLimitSwitch.get()) {
+   //   this.resetEncoders();
+   // }
+
+   //if (!getArmLimitSwitch()) {
+   // this.resetEncoders();
+   //}
   }
 
-  public void setArmSpeed(double speed) {
-    if(!armJawn.get() && speed < 0) {
-      armMotor.set(ControlMode.PercentOutput, 0);
-      armMotor.setSelectedSensorPosition(0);
-    }else {
-      armMotor.set(ControlMode.PercentOutput, speed);
-    }
+
+  public void setManualSpeed(double speed) {
+    armMotor.set(ControlMode.PercentOutput, speed);
   }
+/* 
+  public void setManualSpeed(double speed) {   //Asumming that motor works the same as the elevator
+    if (speed > 0) {
+      pidController.setSetpoint(0);
+      armMotor.set(ControlMode.PercentOutput, pidController.calculate(getArmEncoder()));
+    } else if (speed < 0) {
+      pidController.setSetpoint(ArmConstants.MAX_EXTENSION);
+    } else {
+      armMotor.set(ControlMode.PercentOutput, 0);
+    }
+  } */
 
   public double getArmEncoder() {
-    return armMotor.getSelectedSensorPosition();
+    return armEncoder.getPosition();
   }
 
-  public boolean getArmJawn() {
-    return armJawn.get();
+  public boolean getArmLimitSwitch() {
+    return armLimitSwitch.get();
+  }
+
+  public void lockArm() {
+    armMotor.set(ControlMode.PercentOutput, 0);
   }
  
+  public void resetEncoders() {
+    //armEncoder.setPosition(0);
+  }
 }

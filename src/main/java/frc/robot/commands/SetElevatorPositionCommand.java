@@ -29,6 +29,7 @@ public class SetElevatorPositionCommand extends PIDCommand {
         output -> {
           elevator.setSpeed(output);
         });
+        addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
   }

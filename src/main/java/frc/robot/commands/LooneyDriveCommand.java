@@ -16,18 +16,16 @@ public class LooneyDriveCommand extends CommandBase {
   DoubleSupplier speedSupplier;
   DoubleSupplier rotationSupplier;
   BooleanSupplier turnInPlace;
-  BooleanSupplier fast;
-  BooleanSupplier reverse;
+  BooleanSupplier slow;
   
-  public LooneyDriveCommand(DrivetrainSubsystem drivetrain, DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier turnInPlace, BooleanSupplier fast, BooleanSupplier reverse) {
+  public LooneyDriveCommand(DrivetrainSubsystem drivetrain, DoubleSupplier speedSupplier, DoubleSupplier rotationSupplier, BooleanSupplier turnInPlace, BooleanSupplier slow) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
     this.drivetrain = drivetrain;
     this.speedSupplier = speedSupplier;
     this.rotationSupplier = rotationSupplier;
     this.turnInPlace = turnInPlace;
-    this.fast = fast;
-    this.reverse = reverse;
+    this.slow = slow;
   }
 
   // Called when the command is initially scheduled.
@@ -40,13 +38,11 @@ public class LooneyDriveCommand extends CommandBase {
     double speedMulti = .66;
     double rotationMulti = .66;
     
-    if (fast.getAsBoolean()) {
-      speedMulti = .45;
-      rotationMulti = .45;
+    if (slow.getAsBoolean()) {
+      speedMulti = .3;
+      rotationMulti = .3;
     }
-    if (reverse.getAsBoolean()){
-      speedMulti= speedMulti * -1.0;
-    }
+    
     if (turnInPlace.getAsBoolean()){
       rotationMulti = rotationMulti * 0.5;
     }

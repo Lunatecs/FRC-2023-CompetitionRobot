@@ -31,7 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("elevator encoder", getElevatorEncoder());
-    SmartDashboard.putBoolean("Red = Bottom", elevatorLimitSwitch.get());
+    SmartDashboard.putBoolean("Elevator: Red = Bottom", elevatorLimitSwitch.get());
     SmartDashboard.putNumber("elevator error", this.pidController.getPositionError());
     SmartDashboard.putNumber("elevator setpoint", this.pidController.getSetpoint());
     SmartDashboard.putNumber("pidController output", this.pidController.calculate(getElevatorEncoder()));

@@ -20,9 +20,7 @@ public final class Constants {
     public final static int RIGHT_BACK = 1;
 
     public final static int PIGEON = 6; // TODO: Update
-
-
-
+    
     public final static double WHEEL_DIAMETER = 0.1524;
     public final static double TICKS = 2048.0;
     public final static double GEAR_REDUCTION = 10;
@@ -37,17 +35,13 @@ public final class Constants {
   }
 
   public final static class IntakeConstants{
-    public final static int LEFT_MOTOR = 1; // not used
-    public final static int RIGHT_MOTOR = 9;
-
-    public final static int FORWARD_CHANNEL = 1;
-    public final static int REVERSE_CHANNEL = 1;
+    public final static int INTAKE_MOTOR = 9;
   }
 
   public final static class ElevatorConstants{
     public final static int ELEVATOR_MOTOR = 5;
     public static final int LIMIT_SWITCH = 9;
-    public static final double MAX_HEIGHT = -300000;//314334
+    public static final double MAX_HEIGHT = -300000; //314334
     public static final double MID_HEIGHT = -234000; //-234153
     public static final double BOTTOM = 0;
   }
@@ -55,6 +49,8 @@ public final class Constants {
   public final static class ArmConstants {
     public final static int ARM_MOTOR = 8;
     public final static int LIMIT_SWITCH = 8;
+    public final static int MAX_EXTENSION = 0; //Needs to be changed
+    public final static int ARM_ENCODER = 20;
   }
 
   public final static class JoystickConstants{
