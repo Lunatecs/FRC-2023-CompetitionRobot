@@ -189,6 +189,9 @@ public class RobotContainer {
     
 
     new JoystickButton(testJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new PrintCommand(led.printQueue())); 
+
+    new JoystickButton(testJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new RunCommand(() -> drivetrain.coastMode(true), drivetrain))
+                                                                     .onFalse(new RunCommand(() -> drivetrain.coastMode(false), drivetrain));
   }
 
 
