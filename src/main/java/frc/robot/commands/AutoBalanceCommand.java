@@ -14,10 +14,13 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoBalanceCommand extends PIDCommand {
   /** Creates a new AutoBalanceCommand. */
+
+  private DrivetrainSubsystem drivetrain;
+
   public AutoBalanceCommand(DrivetrainSubsystem drivetrain, double speed) {
     super(
         // The controller that the command will use
-        new PIDController(1, 0, 0.001),
+        new PIDController(1, 0, 0.0),
         // This should return the measurement
         () -> drivetrain.getPitch(),
         // This should return the setpoint (can also be a constant)
@@ -26,21 +29,25 @@ public class AutoBalanceCommand extends PIDCommand {
         output -> {
           // Use the output here
           SmartDashboard.putNumber("output", output);
-
-          output = (output/Math.abs(output)) * 3;
+          if(Math.abs(output)>0.3) {
+            output = (output/Math.abs(output)) * 0.3;
+          }
           drivetrain.arcadeDrive(-output, 0);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     addRequirements(drivetrain);
     this.getController().setTolerance(1);
+    this.drivetrain = drivetrain;
   }
 
   // Returns true when the command should end.
 
   @Override
   public void execute() {
-    SmartDashboard.putNumber("error", this.getController().getPositionError());
+    SmartDashboard.putNumber("balance error", this.getController().getPositionError());
+    SmartDashboard.putNumber("balance set point", this.getController().getSetpoint());
+    SmartDashboard.putNumber("balance  pitch", drivetrain.getPitch());
     super.execute();
   }
 
