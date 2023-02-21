@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.WPI_PigeonIMU;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
@@ -24,7 +26,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private WPI_TalonFX rightFront = new WPI_TalonFX(DrivetrainConstants.RIGHT_FRONT);
   private WPI_TalonFX rightBack = new WPI_TalonFX(DrivetrainConstants.RIGHT_BACK);
 
-  //private Gyro gyro =  new WPI_PigeonIMU(new TalonSRX(Constants.DrivetrainConstants.PIGEON));
+  private final WPI_PigeonIMU pigeon = new WPI_PigeonIMU(DrivetrainConstants.PIGEON);
+
+  private final double zeroAngle;
+
   private DifferentialDrive drive;
   //This maybe be screwed up, cannot figure out distance parameter thingys
   //private DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), 0, 0);
@@ -50,6 +55,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     drive = new DifferentialDrive(leftFront, rightFront);
 
+    pigeon.reset();
+    zeroAngle = pigeon.getPitch();
+
   }
   public void arcadeDrive(double speed, double rotation) {
     drive.arcadeDrive(speed, rotation);
@@ -73,13 +81,15 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
  //   SmartDashboard.putNumber("Gyro", this.getAngle());
 
+    
+
   }
   public double getLeftDistance() {
-    return (leftFront.getSelectedSensorPosition() * DrivetrainConstants.METERS_PER_TICK);
+    return leftFront.getSelectedSensorPosition();
   } 
 
   public double getRightDistance() {
-    return (rightFront.getSelectedSensorPosition() * DrivetrainConstants.METERS_PER_TICK);
+    return rightFront.getSelectedSensorPosition();
   } 
 /* 
   public Pose2d getPose() {
@@ -93,11 +103,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public double getLeftSpeed() {
-    return leftFront.getSelectedSensorVelocity() * DrivetrainConstants.METERS_PER_TICK * 10;
+    return leftFront.getSelectedSensorVelocity();
   }
 
   public double getRightSpeed() {
-    return rightFront.getSelectedSensorVelocity() * DrivetrainConstants.METERS_PER_TICK * 10;
+    return rightFront.getSelectedSensorVelocity();
   } 
 /* 
   public double getAngle() {
@@ -117,10 +127,21 @@ public class DrivetrainSubsystem extends SubsystemBase {
       rightBack.setNeutralMode(NeutralMode.Coast);
       return;
     }
+
     leftFront.setNeutralMode(NeutralMode.Brake);
     leftBack.setNeutralMode(NeutralMode.Brake);
     rightFront.setNeutralMode(NeutralMode.Brake);
     rightBack.setNeutralMode(NeutralMode.Brake);
+  }
+
+  public double getPitch() {
+    double [] yawPitchRoll = new double[3];
+    pigeon.getYawPitchRoll(yawPitchRoll);
+    return yawPitchRoll[1];
+  }
+
+  public double getZeroAngle() {
+    return zeroAngle;
   }
 
 }

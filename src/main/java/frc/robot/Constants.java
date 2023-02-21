@@ -19,13 +19,13 @@ public final class Constants {
     public final static int RIGHT_FRONT = 3;
     public final static int RIGHT_BACK = 1;
 
-    public final static int PIGEON = 6; // TODO: Update
+    public final static int PIGEON = 24; 
     
-    public final static double WHEEL_DIAMETER = 0.1524;
-    public final static double TICKS = 2048.0;
-    public final static double GEAR_REDUCTION = 10;
+    public final static double WHEEL_DIAMETER = 6.0;
+    public final static double TICKS = 2048.0;// 1 rotation (6 inches)
+    public final static double GEAR_RATIO = 10;
     public final static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
-    public final static double METERS_PER_TICK = WHEEL_CIRCUMFERENCE / (TICKS * GEAR_REDUCTION);
+    public final static double TICKS_PER_INCH = (TICKS*GEAR_RATIO)/WHEEL_CIRCUMFERENCE; 
 
    /* 
   public static class OperatorConstants {

@@ -7,6 +7,9 @@ package frc.robot;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.AutoChargingStation;
+import frc.robot.commands.AutoMoveCommand;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -26,6 +29,8 @@ import frc.robot.subsystems.WristSubsystem;
 import frc.robot.utils.SetPointSupplier;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -38,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -60,6 +66,8 @@ public class RobotContainer {
   private final Joystick operatorJoystick = new Joystick(Constants.JoystickConstants.OPERATOR_USB);
   private final Joystick testJoystick = new Joystick(JoystickConstants.TEST_USB);
 
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
   private SetPointSupplier elevatorSetpoint = new SetPointSupplier();
   boolean isCone = false;
 
@@ -72,9 +80,16 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     configureDefaultCommands();
+    configureAutos();
     //CameraServer.startAutomaticCapture();
   }
 
+  public void configureAutos() {
+    autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
+    autoChooser.addOption("Move Forward", new AutoMoveCommand(145, drivetrain, 0.5, 0.25));
+    autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
+    SmartDashboard.putData(autoChooser);
+  }
 
   public void configureDefaultCommands() {
     // add keybinds for turnInPlace, fast, and reverse
@@ -111,6 +126,10 @@ public class RobotContainer {
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake))
                                                                                                           .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
 
+
+    //Auto Balance Button
+    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new AutoBalanceCommand(drivetrain, .5))
+                                                                    .onFalse(new InstantCommand(() -> {}, drivetrain));
 
     //Operator Controller Button Bindings
     //Manual Elevator Buttons
@@ -181,7 +200,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return autoChooser.getSelected();
   }
 }                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 
