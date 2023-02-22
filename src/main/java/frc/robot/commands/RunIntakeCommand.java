@@ -10,16 +10,19 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 
 public class RunIntakeCommand extends CommandBase {
   /** Creates a new RunIntakeCommand. */
   IntakeSubsystem intake;
+  LEDSubsystem led;
   DoubleSupplier intakeSpeed;
   boolean finished = false;
 
-  public RunIntakeCommand(DoubleSupplier speed, IntakeSubsystem intake) {
+  public RunIntakeCommand(DoubleSupplier speed, IntakeSubsystem intake, LEDSubsystem led) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
+    this.led = led;
     intakeSpeed = speed;
     addRequirements(intake);
 
@@ -39,6 +42,7 @@ public class RunIntakeCommand extends CommandBase {
 
     if (intake.tripLimit()) {
       intake.runIntake(0);
+      led.getBackInstance().addColor(led.PICKED_UP);
       // TODO: add code for after limit tripped
       finished=true;
     } else {

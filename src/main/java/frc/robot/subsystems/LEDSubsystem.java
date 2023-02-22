@@ -14,8 +14,11 @@ import frc.robot.Constants.LEDConstants;
 public class LEDSubsystem extends SubsystemBase {
   private static LEDSubsystem ledSubsystem = null;
   private Spark ledControl = new Spark(0);
+  private Spark backLED = new Spark(1);
+  private LEDBack ledBack;
 
   private PriorityQueue<PriorityColor> queue = null;
+  
 
   public final PriorityColor DEFAULT = new PriorityColor(LEDConstants.FIRE_MED, 100, "fire");
   public final PriorityColor BALANCED = new PriorityColor(LEDConstants.CONFETTI, 20, "party");
@@ -39,6 +42,13 @@ public class LEDSubsystem extends SubsystemBase {
       ledSubsystem = new LEDSubsystem();
     }
     return ledSubsystem;
+  }
+
+  public LEDBack getBackInstance() {
+    if (ledBack == null) {
+      ledBack = new LEDBack();
+    }
+    return ledBack;
   }
 
   public void addColor(PriorityColor color) {
@@ -73,7 +83,50 @@ public class LEDSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     ledControl.set(queue.peek().color);
+    backLED.set(ledBack.getColor());
     //ledTest();
+  }
+
+  public class LEDBack {
+    private PriorityQueue<PriorityColor> queue2 = null;
+    LEDBack ledBack;
+
+    private LEDBack() {
+      queue2 = new PriorityQueue<PriorityColor>(new PriorityColor());
+    }
+/* 
+    public LEDBack getInstance() {
+      if (ledBack == null) {
+        ledBack = new LEDBack();
+      }
+      return ledBack;
+    }
+*/
+    public double getColor() {
+      return queue2.peek().color;
+    }
+
+    public void addColor(PriorityColor color) {
+      if(!queue2.contains(color)) {
+        queue2.add(color);
+      }
+    }
+
+    public void removeColor(PriorityColor color) {
+      if(queue2.contains(color)) {
+        queue2.remove(color);
+      }
+    }
+
+    public String getQueueString() {
+      String queueItems = "";
+      for (PriorityColor color : queue2) {
+        queueItems += color.name + ": " + color.priority + ", ";
+      }
+    
+      return queueItems;
+    }
+
   }
 
   private class PriorityColor implements Comparator<PriorityColor>, Comparable<PriorityColor> {

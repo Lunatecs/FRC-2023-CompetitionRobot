@@ -30,6 +30,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private final double zeroAngle;
 
+  private final DifferentialDriveOdometry odometry;
+
   private DifferentialDrive drive;
   //This maybe be screwed up, cannot figure out distance parameter thingys
   //private DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), 0, 0);
@@ -58,6 +60,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     pigeon.reset();
     zeroAngle = pigeon.getPitch();
 
+    odometry = new DifferentialDriveOdometry(pigeon.getRotation2d(), getLeftDistance(), getRightDistance()); //Copied from wpi docs so its hit or miss
   }
   public void arcadeDrive(double speed, double rotation) {
     drive.arcadeDrive(speed, rotation);
@@ -91,11 +94,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public double getRightDistance() {
     return rightFront.getSelectedSensorPosition();
   } 
-/* 
+ 
   public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
-*/
+
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(
     getLeftSpeed(), 
