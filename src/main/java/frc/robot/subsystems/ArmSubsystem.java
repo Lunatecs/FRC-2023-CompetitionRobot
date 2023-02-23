@@ -26,7 +26,7 @@ public class ArmSubsystem extends SubsystemBase {
   private final WPI_TalonSRX armMotor = new WPI_TalonSRX(ArmConstants.ARM_MOTOR);
   private final DigitalInput armLimitSwitch = new DigitalInput(ArmConstants.LIMIT_SWITCH);
   private final CANCoder armEncoder = new CANCoder(ArmConstants.ARM_ENCODER);
-  //private PIDController pidController = null;
+  private PIDController pidController = null;
 
   public ArmSubsystem() {
     armMotor.configFactoryDefault();
@@ -35,8 +35,8 @@ public class ArmSubsystem extends SubsystemBase {
     CANCoderConfiguration config = new CANCoderConfiguration();
     armEncoder.configAllSettings(config);
     armEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10);
-    //pidController = new PIDController(0.0001, 0.0, 0.0);
-    //pidController.setTolerance(500);  
+    pidController = new PIDController(0.01, 0.0, 0.0);
+    //pidController.setTolerance(500);  500 tolerance too high
   }
 
   @Override
@@ -45,32 +45,34 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("arm encoder", getArmEncoder());
     SmartDashboard.putBoolean("arm limit switch", getArmLimitSwitch());
     SmartDashboard.putBoolean("Arm: Red = Bottom", armLimitSwitch.get());
-    
+    SmartDashboard.putNumber("arm pid output", pidController.calculate(getArmEncoder()));
 
-   // if(!armLimitSwitch.get()) {
-   //   this.resetEncoders();
-   // }
+    if(!armLimitSwitch.get()) {
+      this.resetEncoders();
+    }
 
    //if (!getArmLimitSwitch()) {
    // this.resetEncoders();
    //}
   }
 
-
-  public void setManualSpeed(double speed) {
-    armMotor.set(ControlMode.PercentOutput, speed);
-  }
 /* 
-  public void setManualSpeed(double speed) {   //Asumming that motor works the same as the elevator
-    if (speed > 0) {
+  public void setSpeed(double speed) {
+    if (speed < 0 &&)
+    
+  }*/
+
+  public void setSpeed(double speed) {   //Asumming that motor works the same as the elevator
+    if (speed < 0) {// if retracting
       pidController.setSetpoint(0);
       armMotor.set(ControlMode.PercentOutput, pidController.calculate(getArmEncoder()));
-    } else if (speed < 0) {
+    } else if (speed > 0) { // if extending
       pidController.setSetpoint(ArmConstants.MAX_EXTENSION);
+      armMotor.set(ControlMode.PercentOutput, pidController.calculate(getArmEncoder()));
     } else {
       armMotor.set(ControlMode.PercentOutput, 0);
     }
-  } */
+  }
 
   public double getArmEncoder() {
     return armEncoder.getPosition();
@@ -85,6 +87,6 @@ public class ArmSubsystem extends SubsystemBase {
   }
  
   public void resetEncoders() {
-    //armEncoder.setPosition(0);
+    armEncoder.setPosition(0);
   }
 }

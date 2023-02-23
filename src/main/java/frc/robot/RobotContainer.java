@@ -152,13 +152,13 @@ public class RobotContainer {
   
 
     //Manual Arm Buttons
-    new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setManualSpeed(-.2), arm)))
+    new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setSpeed(-.2), arm)))
                                                                       //.onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
-                                                                      .onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
+                                                                      .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
     
-    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setManualSpeed(.2), arm)))
+    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setSpeed(.2), arm)))
                                                                       //.onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
-                                                                      .onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
+                                                                      .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
 
     //Manual Wrist Control
     new Trigger(() -> {return Math.abs(operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)) > 0.2;}).whileTrue(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)))

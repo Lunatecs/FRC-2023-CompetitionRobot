@@ -43,7 +43,6 @@ public class RunIntakeCommand extends CommandBase {
     if (intake.tripLimit()) {
       intake.runIntake(0);
       led.getBackInstance().addColor(led.PICKED_UP);
-      // TODO: add code for after limit tripped
       finished=true;
     } else {
       intake.runIntake(intakeSpeed.getAsDouble());

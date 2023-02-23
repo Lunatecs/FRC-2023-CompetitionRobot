@@ -49,7 +49,7 @@ public final class Constants {
   public final static class ArmConstants {
     public final static int ARM_MOTOR = 8;
     public final static int LIMIT_SWITCH = 8;
-    public final static int MAX_EXTENSION = 0; //Needs to be changed
+    public final static double MAX_EXTENSION = 740.0;
     public final static int ARM_ENCODER = 20;
   }
 

@@ -28,6 +28,7 @@ public class LEDSubsystem extends SubsystemBase {
 
   
   private LEDSubsystem() {
+    ledBack = new LEDBack();
     queue = new PriorityQueue<PriorityColor>(new PriorityColor());
     addDefaultColor();
     
@@ -45,9 +46,6 @@ public class LEDSubsystem extends SubsystemBase {
   }
 
   public LEDBack getBackInstance() {
-    if (ledBack == null) {
-      ledBack = new LEDBack();
-    }
     return ledBack;
   }
 
@@ -82,8 +80,14 @@ public class LEDSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    ledControl.set(queue.peek().color);
-    backLED.set(ledBack.getColor());
+    try {
+      ledControl.set(queue.peek().color);
+      backLED.set(ledBack.getColor());
+    } catch (NullPointerException e) {
+      System.err.println("queue is empty");
+    }
+
+    
     //ledTest();
   }
 
