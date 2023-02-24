@@ -121,10 +121,11 @@ public class RobotContainer {
     //Driver Controller Button Bindings
     //Intake
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake, led))
-                                                                                                            .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
+                                                                                                           .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
+                                                                                                         //.onFalse(new RunCommand(() -> intake.runIntake(0), intake));
 
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake, led))
-                                                                                                          .onFalse(new RunCommand(() -> {intake.runIntake(0); led.getBackInstance().removeColor(led.PICKED_UP);}, intake));
+                                                                                                          .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
 
 
     //Auto Balance Button
