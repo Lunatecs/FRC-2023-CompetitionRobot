@@ -36,7 +36,7 @@ public class ArmSubsystem extends SubsystemBase {
     armEncoder.configAllSettings(config);
     armEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10);
     pidController = new PIDController(0.01, 0.0, 0.0);
-    //pidController.setTolerance(500);  500 tolerance too high
+    pidController.setTolerance(40);
   }
 
   @Override
@@ -72,6 +72,11 @@ public class ArmSubsystem extends SubsystemBase {
     } else {
       armMotor.set(ControlMode.PercentOutput, 0);
     }
+  }
+
+  public void setSpeed(double speed, double setpoint) {
+    pidController.setSetpoint(setpoint);
+    armMotor.set(ControlMode.PercentOutput, pidController.calculate(getArmEncoder()));
   }
 
   public double getArmEncoder() {

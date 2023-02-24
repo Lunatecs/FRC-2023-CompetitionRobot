@@ -13,7 +13,6 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoChargingStation extends SequentialCommandGroup {
   /** Creates a new AutoChargingStation. */
-  DrivetrainSubsystem drivetrain;
 
   public AutoChargingStation(DrivetrainSubsystem drivetrain) {
     

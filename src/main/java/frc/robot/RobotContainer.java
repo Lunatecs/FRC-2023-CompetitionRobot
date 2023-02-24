@@ -190,8 +190,11 @@ public class RobotContainer {
 
     new JoystickButton(testJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new PrintCommand(led.printQueue())); 
 
-    new JoystickButton(testJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new RunCommand(() -> drivetrain.coastMode(true), drivetrain))
-                                                                     .onFalse(new RunCommand(() -> drivetrain.coastMode(false), drivetrain));
+    new JoystickButton(testJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new InstantCommand(() -> drivetrain.coastMode(true), drivetrain))
+                                                                     .onFalse(new InstantCommand(() -> drivetrain.coastMode(false), drivetrain));
+    
+    new JoystickButton(testJoystick, JoystickConstants.RED_BUTTON).onTrue(new InstantCommand(() -> elevator.coastMode(true), elevator))
+                                                                  .onFalse(new InstantCommand(() -> elevator.coastMode(false), elevator));
   }
 
 

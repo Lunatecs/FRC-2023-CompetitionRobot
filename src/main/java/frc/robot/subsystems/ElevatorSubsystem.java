@@ -50,8 +50,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     } else {
       elevatorMotor.set(ControlMode.PercentOutput, 0);
     }
-
-    /*
+        /*
      * if elevator up:
      *  max height pidloop
      *  when reaches max, stops if continues going up
@@ -61,7 +60,18 @@ public class ElevatorSubsystem extends SubsystemBase {
      *    reset encoder
      *    set speed to 0 if continue going down
      */
+  }
 
+  public void setManualSpeed(double speed, double setpoint) {
+    if(speed > 0) { //If elevator is going down...
+      pidController.setSetpoint(setpoint);
+      elevatorMotor.set(ControlMode.PercentOutput, pidController.calculate(getElevatorEncoder()));
+    } else if(speed < 0 && !tripLimit()) { //If elevator is going up...
+      pidController.setSetpoint(ElevatorConstants.MAX_HEIGHT);
+      elevatorMotor.set(ControlMode.PercentOutput, pidController.calculate(getElevatorEncoder()));
+    } else {
+      elevatorMotor.set(ControlMode.PercentOutput, 0);
+    }
   }
 
   public void setSpeed(double speed) {
