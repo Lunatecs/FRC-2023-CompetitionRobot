@@ -80,13 +80,15 @@ public class LEDSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    try {
+    /*try {
       ledControl.set(queue.peek().color);
       backLED.set(ledBack.getColor());
     } catch (NullPointerException e) {
       System.err.println("queue is empty");
-    }
+    }*/
 
+    ledControl.set(queue.peek().color);
+    backLED.set(ledBack.getColor());
     
     //ledTest();
   }
@@ -107,6 +109,9 @@ public class LEDSubsystem extends SubsystemBase {
     }
 */
     public double getColor() {
+      if(queue2.peek() == null) {
+        return .93; // solid white (default for back led)
+      }
       return queue2.peek().color;
     }
 
