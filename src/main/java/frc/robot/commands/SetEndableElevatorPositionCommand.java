@@ -4,25 +4,21 @@
 
 package frc.robot.commands;
 
-import java.util.function.DoubleSupplier;
-
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.utils.SetPointSupplier;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class SetElevatorPositionCommand extends PIDCommand {
-
-  ElevatorSubsystem elevator;
-
-  public SetElevatorPositionCommand(ElevatorSubsystem elevator, double setpoint, double p, double i, double d) {
+public class SetEndableElevatorPositionCommand extends PIDCommand {
+  /** Creates a new SetEndableElevatorPositionCommand. */
+  public SetEndableElevatorPositionCommand(ElevatorSubsystem elevator, double setpoint, double p) {
     super(
         // The controller that the command will use
-        new PIDController(p, i, d),
+        new PIDController(p, 0, 0),
         // This should return the measurement
         () -> elevator.getElevatorEncoder(),
         // This should return the setpoint (can also be a constant)
@@ -30,12 +26,10 @@ public class SetElevatorPositionCommand extends PIDCommand {
         // This uses the output
         output -> {
           elevator.setSpeed(output);
-          SmartDashboard.putNumber("Output", output);
         });
-        this.elevator = elevator;
         addRequirements(elevator);
     // Use addRequirements() here to declare subsystem dependencies.
-    // Configure additional PID options by calling `getController` her6e.
+    // Configure additional PID options by calling `getController` here.
   }
 
   @Override
@@ -44,20 +38,14 @@ public class SetElevatorPositionCommand extends PIDCommand {
     this.getController().setTolerance(500);
   }
 
-  @Override
-  public void execute() {
-    SmartDashboard.putNumber("Elevator Error", this.getController().getPositionError());
-    SmartDashboard.putNumber("Elevator Tolerance", this.getController().getPositionTolerance());
-    if(elevator.tripLimit() && this.getController().calculate(elevator.getElevatorEncoder()) < 0) {
-      elevator.setSpeed(0);
-      return;
-    }
-    super.execute();
-  }
+
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    SmartDashboard.putBoolean("Ended Elevator Command", Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance());
+    SmartDashboard.putNumber("Endable Elevator Error", this.getController().getPositionError());
+    SmartDashboard.putNumber("Endable Elevator Tolerance", this.getController().getPositionTolerance());
+    return Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance();
   }
 }

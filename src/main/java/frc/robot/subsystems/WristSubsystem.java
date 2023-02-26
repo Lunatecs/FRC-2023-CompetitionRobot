@@ -19,6 +19,7 @@ public class WristSubsystem extends SubsystemBase {
   public WristSubsystem() {
     rizzMotor.configFactoryDefault();
     rizzMotor.setNeutralMode(NeutralMode.Brake);
+    resetEncoder();
   }
 
   @Override
@@ -33,6 +34,10 @@ public class WristSubsystem extends SubsystemBase {
 
   public double getWristEncoder() {
     return rizzMotor.getSelectedSensorPosition();
+  }
+
+  public void resetEncoder() {
+    rizzMotor.setSelectedSensorPosition(0);
   }
 
   public boolean tripLimit() {

@@ -22,6 +22,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
   public ElevatorSubsystem() {
     elevatorMotor.configFactoryDefault();
+    resetEncoders();
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     pidController = new PIDController(0.0001, 0.0, 0.0);
     pidController.setTolerance(500);  
@@ -51,7 +52,7 @@ public class ElevatorSubsystem extends SubsystemBase {
       elevatorMotor.set(ControlMode.PercentOutput, 0);
     }
         /*
-     * if elevator up:
+     *  elevator up?:
      *  max height pidloop
      *  when reaches max, stops if continues going up
      * if elevator down:

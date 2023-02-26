@@ -7,53 +7,40 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
-import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.utils.SetPointSupplier;
+import frc.robot.subsystems.WristSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class LockElevatorCommand extends PIDCommand {
-  SetPointSupplier setpoint;
-  ElevatorSubsystem elevator;
+public class SetWristAngleCommand extends PIDCommand {
+  /** Creates a new SetWristAngleCommand. */
 
-  /** Creates a new LockElevatorCommand. */
-  public LockElevatorCommand(SetPointSupplier setpoint, ElevatorSubsystem elevator) {
+  WristSubsystem wrist;
+
+  public SetWristAngleCommand(WristSubsystem wrist, double setpoint) {
     super(
         // The controller that the command will use
-        new PIDController(0.000005, 0, 0),
+        new PIDController(0.0001, 0, 0),
         // This should return the measurement
-        () -> elevator.getElevatorEncoder(),
+        () -> wrist.getWristEncoder(),
         // This should return the setpoint (can also be a constant)
-        setpoint,
+        () -> setpoint,
         // This uses the output
         output -> {
-          // Use the output here
-          elevator.setSpeed(output); //TODO: update position later
+          wrist.turnWrist(output);
         });
-    
-    addRequirements(elevator);
-    this.setpoint = setpoint;
-    this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
-    // Configure additional PID options by calling `getController` here.
-  }
-
-  @Override
-  public void initialize() {
-    setpoint.setSetPoint(elevator.getElevatorEncoder());
-    super.initialize();
-  }
-
-  @Override
-  public void execute() {
-    SmartDashboard.putNumber("elevator error", this.getController().getPositionError());
-    super.execute();
+    addRequirements(wrist);
+    this.getController().setTolerance(1000);
+    this.wrist = wrist;
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    SmartDashboard.putNumber("Wrist Command Error", this.getController().getPositionError());
+    SmartDashboard.putNumber("Wrist Command Encoder", this.wrist.getWristEncoder());
+    SmartDashboard.putNumber("Wrist Command SetPoint", this.getController().getSetpoint());
+    return Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance();
   }
 }

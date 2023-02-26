@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutoChargingStation;
@@ -16,7 +18,11 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockElevatorCommand;
 import frc.robot.commands.LooneyDriveCommand;
 import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.SetArmExtensionCommand;
 import frc.robot.commands.SetElevatorPositionCommand;
+import frc.robot.commands.SetOtherLevelsCommand;
+import frc.robot.commands.SetTopLevelCommand;
+import frc.robot.commands.SetWristAngleCommand;
 //import frc.robot.commands.ToggleLED;
 import frc.robot.commands.WristBrakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -37,6 +43,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -98,7 +105,7 @@ public class RobotContainer {
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, 
     () -> driverJoystick.getRawButton(JoystickConstants.RIGHT_BUMPER), 
     () -> driverJoystick.getRawButton(JoystickConstants.LEFT_BUMPER)));
-
+    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.1), intake));
     //led.setDefaultCommand(new ToggleLED(led));
     //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
   }
@@ -134,32 +141,44 @@ public class RobotContainer {
 
     //Operator Controller Button Bindings
     //Manual Elevator Buttons
+    /*
     new POVButton(operatorJoystick, JoystickConstants.POV_UP).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setManualSpeed(-1), elevator)))
                                                                               //.onFalse(new LockElevatorCommand(new SetPointSupplier(), elevator));
                                                                               .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
     
     new POVButton(operatorJoystick, JoystickConstants.POV_DOWN).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setManualSpeed(1), elevator)))
-                                                                              .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
+                                                                              .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator)); */
 
     //Elevator Setpoints
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.BOTTOM, 0.0));
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, 0));
                                                                         //.onFalse(new InstantCommand(() -> {}, elevator));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.0));
+    //new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.00002, 0.0, 0.0));
                                                                           //.onFalse(new InstantCommand(() -> {}, elevator));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.MID_HEIGHT, 0.0));
+    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, ElevatorConstants.MID_HEIGHT));
                                                                         //.onFalse(new InstantCommand(() -> {}, elevator));
-  
+    
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator)); 
+
+    //new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SequentialCommandGroup(null));
 
     //Manual Arm Buttons
-    new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setSpeed(-.2), arm)))
+   // new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setSpeed(-.2), arm)))
                                                                       //.onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
-                                                                      .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
+   //                                                                   .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
     
-    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setSpeed(.2), arm)))
+   // new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new RepeatCommand(new RunCommand(() -> arm.setSpeed(.2), arm)))
                                                                       //.onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
-                                                                      .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
+    //                                                                  .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
+
+    //Setpoint Arm Buttons
+
+    new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).onTrue(new SetArmExtensionCommand(514, arm));
+
+    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).onTrue(new SetArmExtensionCommand(0, arm));
+
+    //new POVButton(operatorJoystick, JoystickConstants.POV_UP).onTrue(new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm));
 
     //Manual Wrist Control
     new Trigger(() -> {return Math.abs(operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)) > 0.2;}).whileTrue(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)))
@@ -175,7 +194,12 @@ public class RobotContainer {
     //new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).toggleOnTrue(new RunCommand(() -> led.addColor(led.INTAKE_CONE), led));
                                                                         //.toggleOnFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CONE), led));                                                             
 
+    //Setpoint Wrist Control
+    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SetWristAngleCommand(wrist, WristConstants.CONE_SETPOINT))
+                                                                      .onFalse(new SetWristAngleCommand(wrist, 0));
+
     // some test code rn dont worry
+    /* 
     new JoystickButton(testJoystick, JoystickConstants.BACK_BUTTON)
                       .onTrue(new RunCommand(() -> {
                         led.removeColor(led.INTAKE_CONE);
@@ -187,16 +211,18 @@ public class RobotContainer {
                         led.removeColor(led.INTAKE_CUBE);
                         led.addColor(led.INTAKE_CONE);
                       }, led));
-    
+    */
 
-    new JoystickButton(testJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new PrintCommand(led.printQueue())); 
+    //new JoystickButton(testJoystick, JoystickConstants.RED_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator)); 
 
+    /*
     new JoystickButton(testJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new InstantCommand(() -> drivetrain.coastMode(true), drivetrain))
                                                                      .onFalse(new InstantCommand(() -> drivetrain.coastMode(false), drivetrain));
     
     new JoystickButton(testJoystick, JoystickConstants.RED_BUTTON).onTrue(new InstantCommand(() -> elevator.coastMode(true), elevator))
                                                                   .onFalse(new InstantCommand(() -> elevator.coastMode(false), elevator));
-  }
+    */
+    }
 
 
 

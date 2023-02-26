@@ -63,20 +63,7 @@ public class ArmSubsystem extends SubsystemBase {
   }*/
 
   public void setSpeed(double speed) {   //Asumming that motor works the same as the elevator
-    if (speed < 0) {// if retracting
-      pidController.setSetpoint(0);
-      armMotor.set(ControlMode.PercentOutput, pidController.calculate(getArmEncoder()));
-    } else if (speed > 0) { // if extending
-      pidController.setSetpoint(ArmConstants.MAX_EXTENSION);
-      armMotor.set(ControlMode.PercentOutput, pidController.calculate(getArmEncoder()));
-    } else {
-      armMotor.set(ControlMode.PercentOutput, 0);
-    }
-  }
-
-  public void setSpeed(double speed, double setpoint) {
-    pidController.setSetpoint(setpoint);
-    armMotor.set(ControlMode.PercentOutput, pidController.calculate(getArmEncoder()));
+      armMotor.set(ControlMode.PercentOutput, speed);
   }
 
   public double getArmEncoder() {
