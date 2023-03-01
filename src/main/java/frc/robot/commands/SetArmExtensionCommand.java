@@ -18,7 +18,7 @@ public class SetArmExtensionCommand extends PIDCommand {
   public SetArmExtensionCommand(double setpoint, ArmSubsystem arm) {
     super(
         // The controller that the command will use
-        new PIDController(0.008, 0, 0),
+        new PIDController(0.009, 0, 0),
         // This should return the measurement
         () -> arm.getArmEncoder(),
         // This should return the setpoint (can also be a constant)
@@ -27,6 +27,10 @@ public class SetArmExtensionCommand extends PIDCommand {
         output -> {
           if (Math.abs(output) < 0.1) {
             output = (Math.abs(output)/output)*0.1;
+          }
+          //Yes, it is probably possible to make this cleaner/more effcient. No, I do not in fact care.
+          if (Math.abs(output) > 0.7) {
+            output = (Math.abs(output)/output)*0.7;
           }
 
           arm.setSpeed(output);

@@ -14,6 +14,7 @@ import frc.robot.commands.AutoChargingStation;
 import frc.robot.commands.AutoMoveCommand;
 //import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.commands.DeliverConeTopCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockElevatorCommand;
 import frc.robot.commands.LooneyDriveCommand;
@@ -95,6 +96,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption("Move Forward", new AutoMoveCommand(145, drivetrain, 0.5, 0.25));
     autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
+    autoChooser.addOption("Deliver Cone Top", new DeliverConeTopCommand(elevator, arm, wrist, intake));
     SmartDashboard.putData(autoChooser);
   }
 
@@ -150,16 +152,16 @@ public class RobotContainer {
                                                                               .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator)); */
 
     //Elevator Setpoints
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, 0));
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, 0, 0));
                                                                         //.onFalse(new InstantCommand(() -> {}, elevator));
 
     //new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.00002, 0.0, 0.0));
                                                                           //.onFalse(new InstantCommand(() -> {}, elevator));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, ElevatorConstants.MID_HEIGHT));
+    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.MID_HEIGHT, WristConstants.CONE_SETPOINT));
                                                                         //.onFalse(new InstantCommand(() -> {}, elevator));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator)); 
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator, wrist)); 
 
     //new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SequentialCommandGroup(null));
 
@@ -195,8 +197,8 @@ public class RobotContainer {
                                                                         //.toggleOnFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CONE), led));                                                             
 
     //Setpoint Wrist Control
-    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SetWristAngleCommand(wrist, WristConstants.CONE_SETPOINT))
-                                                                      .onFalse(new SetWristAngleCommand(wrist, 0));
+    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SetWristAngleCommand(wrist, WristConstants.CONE_SETPOINT));
+                                                                      //.onFalse(new SetWristAngleCommand(wrist, 0));
 
     // some test code rn dont worry
     /* 

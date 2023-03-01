@@ -4,9 +4,12 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants.WristConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.WristSubsystem;
 import frc.robot.utils.SetPointSupplier;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -14,15 +17,19 @@ import frc.robot.utils.SetPointSupplier;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetOtherLevelsCommand extends SequentialCommandGroup {
   /** I HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDS */
-  public SetOtherLevelsCommand(ElevatorSubsystem elevator, ArmSubsystem arm, double setpoint) {
+  public SetOtherLevelsCommand(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist, double setpoint, double wristSetpoint) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new SetWristAngleCommand(wrist, 0),
       new SetArmExtensionCommand(0, arm),
-      new SetElevatorPositionCommand(elevator, setpoint, 0.00006, 0.0, 0.0),
-      new LockElevatorCommand(new SetPointSupplier(), elevator)
+      new SetEndableElevatorPositionCommand(elevator, setpoint, 0.00006),
+      new ParallelCommandGroup(
+        new SetWristAngleCommand(wrist, wristSetpoint),
+        new LockElevatorCommand(new SetPointSupplier(), elevator)
+      )
     );
 
-    addRequirements(elevator, arm);
+    addRequirements(elevator, arm, wrist);
   }
 }

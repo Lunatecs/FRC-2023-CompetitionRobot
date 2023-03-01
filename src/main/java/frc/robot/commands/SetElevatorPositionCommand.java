@@ -30,7 +30,7 @@ public class SetElevatorPositionCommand extends PIDCommand {
         // This uses the output
         output -> {
           elevator.setSpeed(output);
-          SmartDashboard.putNumber("Output", output);
+          SmartDashboard.putNumber("Elevator Output", output);
         });
         this.elevator = elevator;
         addRequirements(elevator);

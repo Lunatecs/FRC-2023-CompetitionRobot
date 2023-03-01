@@ -18,14 +18,13 @@ public class LockElevatorCommand extends PIDCommand {
   ElevatorSubsystem elevator;
 
   /** Creates a new LockElevatorCommand. */
-  public LockElevatorCommand(SetPointSupplier setpoint, ElevatorSubsystem elevator) {
+  public LockElevatorCommand(SetPointSupplier setPointSupplier, ElevatorSubsystem elevator) {
     super(
         // The controller that the command will use
-        new PIDController(0.000005, 0, 0),
+        new PIDController(0.000005, 0, 0.0),
         // This should return the measurement
         () -> elevator.getElevatorEncoder(),
-        // This should return the setpoint (can also be a constant)
-        setpoint,
+        setPointSupplier,
         // This uses the output
         output -> {
           // Use the output here
@@ -33,7 +32,7 @@ public class LockElevatorCommand extends PIDCommand {
         });
     
     addRequirements(elevator);
-    this.setpoint = setpoint;
+    this.setpoint = setPointSupplier;
     this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
@@ -47,7 +46,6 @@ public class LockElevatorCommand extends PIDCommand {
 
   @Override
   public void execute() {
-    SmartDashboard.putNumber("elevator error", this.getController().getPositionError());
     super.execute();
   }
 

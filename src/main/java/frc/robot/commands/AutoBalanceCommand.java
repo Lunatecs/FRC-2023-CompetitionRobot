@@ -29,8 +29,8 @@ public class AutoBalanceCommand extends PIDCommand {
         output -> {
           // Use the output here
           SmartDashboard.putNumber("output", output);
-          if(Math.abs(output)>0.3) {
-            output = (output/Math.abs(output)) * 0.3;
+          if(Math.abs(output)>0.325) {
+            output = (output/Math.abs(output)) * 0.325;
           }
           drivetrain.arcadeDrive(-output, 0);
         });

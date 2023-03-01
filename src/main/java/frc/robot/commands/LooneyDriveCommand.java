@@ -35,8 +35,8 @@ public class LooneyDriveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speedMulti = .66;
-    double rotationMulti = .66;
+    double speedMulti = 1;
+    double rotationMulti = 1;
     
     if (slow.getAsBoolean()) {
       speedMulti = .3;
