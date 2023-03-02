@@ -15,6 +15,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetEndableElevatorPositionCommand extends PIDCommand {
   /** Creates a new SetEndableElevatorPositionCommand. */
+  ElevatorSubsystem elevator;
   public SetEndableElevatorPositionCommand(ElevatorSubsystem elevator, double setpoint, double p) {
     super(
         // The controller that the command will use
@@ -25,9 +26,13 @@ public class SetEndableElevatorPositionCommand extends PIDCommand {
         () -> setpoint,
         // This uses the output
         output -> {
+          if (Math.abs(output) < 0.1) {
+            output = (Math.abs(output)/output) * 0.1;
+          }
           elevator.setSpeed(output);
         });
         addRequirements(elevator);
+        this.elevator = elevator;
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
   }
@@ -47,5 +52,11 @@ public class SetEndableElevatorPositionCommand extends PIDCommand {
     SmartDashboard.putNumber("Endable Elevator Error", this.getController().getPositionError());
     SmartDashboard.putNumber("Endable Elevator Tolerance", this.getController().getPositionTolerance());
     return Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    super.end(interrupted);
+    elevator.setSpeed(0);
   }
 }

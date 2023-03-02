@@ -29,6 +29,9 @@ public class SetElevatorPositionCommand extends PIDCommand {
         () -> setpoint,
         // This uses the output
         output -> {
+          if (Math.abs(output) < 0.1) {
+            output = (Math.abs(output)/output) * 0.1;
+          }
           elevator.setSpeed(output);
           SmartDashboard.putNumber("Elevator Output", output);
         });
@@ -59,5 +62,11 @@ public class SetElevatorPositionCommand extends PIDCommand {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    super.end(interrupted);
+    elevator.setSpeed(0);
   }
 }

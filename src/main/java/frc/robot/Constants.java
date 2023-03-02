@@ -41,8 +41,8 @@ public final class Constants {
   public final static class ElevatorConstants{
     public final static int ELEVATOR_MOTOR = 5;
     public static final int LIMIT_SWITCH = 9;
-    public static final double MAX_HEIGHT = -182000; //-300000 (old)
-    public static final double MID_HEIGHT = -135972; //-234000 (old)
+    public static final double MAX_HEIGHT = -93000;//-95000;//-98000;//-101000; //-182000 (old)
+    public static final double MID_HEIGHT = -57000;//-60000;//-63000; //-135972 (old)
     public static final double BOTTOM = 0;
   }
 
@@ -85,8 +85,8 @@ public final class Constants {
 
   public final static class WristConstants{
     public final static int WRIST_MOTOR = 6;
-    public final static double WRIST_SETPOINT = 414.9;
-    public final static double CONE_SETPOINT = 33480;
+    public final static double WRIST_HOME = 2500;
+    public final static double CONE_SETPOINT = 20000;
   }
 
   public final static class LEDConstants {

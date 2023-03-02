@@ -25,13 +25,13 @@ public class SetArmExtensionCommand extends PIDCommand {
         () -> setpoint,
         // This uses the output
         output -> {
-          if (Math.abs(output) < 0.1) {
-            output = (Math.abs(output)/output)*0.1;
+          if (Math.abs(output) < 0.2) {
+            output = (Math.abs(output)/output)*0.2;
           }
           //Yes, it is probably possible to make this cleaner/more effcient. No, I do not in fact care.
-          if (Math.abs(output) > 0.7) {
+          /*if (Math.abs(output) > 0.7) {
             output = (Math.abs(output)/output)*0.7;
-          }
+          }*/
 
           arm.setSpeed(output);
           SmartDashboard.putNumber("Arm Output", output);
@@ -56,5 +56,11 @@ public class SetArmExtensionCommand extends PIDCommand {
   @Override
   public boolean isFinished() {
     return Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    super.end(interrupted);
+    arm.setSpeed(0);
   }
 }

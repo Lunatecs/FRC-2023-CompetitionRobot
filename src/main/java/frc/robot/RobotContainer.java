@@ -16,6 +16,7 @@ import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.DeliverConeTopCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LockArmCommand;
 import frc.robot.commands.LockElevatorCommand;
 import frc.robot.commands.LooneyDriveCommand;
 import frc.robot.commands.RunIntakeCommand;
@@ -107,7 +108,8 @@ public class RobotContainer {
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, 
     () -> driverJoystick.getRawButton(JoystickConstants.RIGHT_BUMPER), 
     () -> driverJoystick.getRawButton(JoystickConstants.LEFT_BUMPER)));
-    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.1), intake));
+    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.2), intake));
+    arm.setDefaultCommand(new LockArmCommand(arm, new SetPointSupplier()));
     //led.setDefaultCommand(new ToggleLED(led));
     //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
   }
@@ -130,11 +132,11 @@ public class RobotContainer {
     //Driver Controller Button Bindings
     //Intake
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake, led))
-                                                                                                           .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
+                                                                                                           .onFalse(new InstantCommand(() -> {}, intake));
                                                                                                          //.onFalse(new RunCommand(() -> intake.runIntake(0), intake));
 
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake, led))
-                                                                                                          .onFalse(new RunCommand(() -> intake.runIntake(0), intake));
+                                                                                                          .onFalse(new InstantCommand(() -> {}, intake));
 
 
     //Auto Balance Button
@@ -152,7 +154,7 @@ public class RobotContainer {
                                                                               .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator)); */
 
     //Elevator Setpoints
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, 0, 0));
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, 0, WristConstants.WRIST_HOME));
                                                                         //.onFalse(new InstantCommand(() -> {}, elevator));
 
     //new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.00002, 0.0, 0.0));

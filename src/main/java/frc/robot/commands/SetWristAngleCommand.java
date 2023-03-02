@@ -27,6 +27,9 @@ public class SetWristAngleCommand extends PIDCommand {
         () -> setpoint,
         // This uses the output
         output -> {
+          if (Math.abs(output) < 0.1) {
+            output = (Math.abs(output)/output) * 0.1;
+          }
           wrist.turnWrist(output);
         });
     // Use addRequirements() here to declare subsystem dependencies.

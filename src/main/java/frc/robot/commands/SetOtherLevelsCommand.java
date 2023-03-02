@@ -21,12 +21,16 @@ public class SetOtherLevelsCommand extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SetWristAngleCommand(wrist, 0),
+      new SetWristAngleCommand(wrist, WristConstants.WRIST_HOME),
       new SetArmExtensionCommand(0, arm),
       new SetEndableElevatorPositionCommand(elevator, setpoint, 0.00006),
       new ParallelCommandGroup(
-        new SetWristAngleCommand(wrist, wristSetpoint),
-        new LockElevatorCommand(new SetPointSupplier(), elevator)
+        new SequentialCommandGroup(
+          new SetWristAngleCommand(wrist, wristSetpoint),
+          new WristBrakeCommand(new SetPointSupplier(), wrist)
+        ),
+        new LockElevatorCommand(new SetPointSupplier(), elevator),
+        new LockArmCommand(arm, new SetPointSupplier())
       )
     );
 
