@@ -87,6 +87,9 @@ public final class Constants {
     public final static int WRIST_MOTOR = 6;
     public final static double WRIST_HOME = 2500;
     public final static double CONE_SETPOINT = 20000;
+    public final static double GROUND_INTAKE = 42000;
+    //These will be made for cones, but it is likely that cubes will require a seperate constant.
+    //public final static double STATION_INTAKE = ;
   }
 
   public final static class LEDConstants {

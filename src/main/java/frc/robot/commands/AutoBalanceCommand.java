@@ -20,7 +20,7 @@ public class AutoBalanceCommand extends PIDCommand {
   public AutoBalanceCommand(DrivetrainSubsystem drivetrain, double speed) {
     super(
         // The controller that the command will use
-        new PIDController(1, 0, 0.0),
+        new PIDController(0.6, 0, 0.0),
         // This should return the measurement
         () -> drivetrain.getPitch(),
         // This should return the setpoint (can also be a constant)
@@ -30,7 +30,7 @@ public class AutoBalanceCommand extends PIDCommand {
           // Use the output here
           SmartDashboard.putNumber("output", output);
           if(Math.abs(output)>0.325) {
-            output = (output/Math.abs(output)) * 0.325;
+            output = Math.signum(output) * 0.325;
           }
           drivetrain.arcadeDrive(-output, 0);
         });
