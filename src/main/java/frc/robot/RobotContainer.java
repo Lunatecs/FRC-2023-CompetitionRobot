@@ -162,8 +162,6 @@ public class RobotContainer {
     
     new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator, wrist)); 
 
-    //new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SequentialCommandGroup(null));
-
     //Manual Arm Buttons
     new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm))
                                                                       //.onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
@@ -186,13 +184,6 @@ public class RobotContainer {
     
     new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new WristBrakeCommand(new SetPointSupplier(), wrist))
                                                                         .onFalse(new InstantCommand(() -> {}, wrist));
-
-    //new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new PrintCommand(led.printQueue()));
-
-  
-    //new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).toggleOnTrue(new RunCommand(() -> led.addColor(led.INTAKE_CONE), led));
-                                                                        //.toggleOnFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CONE), led));                                                             
-
     //Setpoint Wrist Control
     new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetWristAngleCommand(wrist, WristConstants.GROUND_INTAKE))
                                                                     .onFalse(new WristBrakeCommand(new SetPointSupplier(), wrist));// Temporarily set like this for testing purposes
