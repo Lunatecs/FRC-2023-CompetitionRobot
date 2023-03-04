@@ -62,6 +62,8 @@ public class ArmSubsystem extends SubsystemBase {
     
   }*/
 
+  
+
   public void setSpeed(double speed) {   //Asumming that motor works the same as the elevator
       armMotor.set(ControlMode.PercentOutput, speed);
   }

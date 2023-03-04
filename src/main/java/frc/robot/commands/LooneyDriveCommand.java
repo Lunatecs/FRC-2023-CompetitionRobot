@@ -38,13 +38,13 @@ public class LooneyDriveCommand extends CommandBase {
     double speedMulti = 1;
     double rotationMulti = 1;
     
+    if (turnInPlace.getAsBoolean()){
+      rotationMulti = rotationMulti * 0.5;
+    }
+    
     if (slow.getAsBoolean()) {
       speedMulti = .3;
       rotationMulti = .3;
-    }
-    
-    if (turnInPlace.getAsBoolean()){
-      rotationMulti = rotationMulti * 0.5;
     }
 
     drivetrain.curvatureDrive(speedSupplier.getAsDouble()*speedMulti, rotationSupplier.getAsDouble()*rotationMulti, turnInPlace.getAsBoolean());

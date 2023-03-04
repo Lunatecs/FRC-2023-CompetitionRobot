@@ -41,13 +41,13 @@ public final class Constants {
   public final static class ElevatorConstants{
     public final static int ELEVATOR_MOTOR = 5;
     public static final int LIMIT_SWITCH = 9;
-    public static final double MAX_HEIGHT = -93000;//-95000;//-98000;//-101000; //-182000 (old)
+    public static final double MAX_HEIGHT = -95000;//-95000;//-98000;//-101000; //-182000 (old)
     public static final double MID_HEIGHT = -57000;//-60000;//-63000; //-135972 (old)
     public static final double BOTTOM = 0;
   }
 
   public final static class ArmConstants {
-    public final static int ARM_MOTOR = 8;
+    public final static int ARM_MOTOR = 8; 
     public final static int LIMIT_SWITCH = 8;
     public final static double MAX_EXTENSION = 740.0;
     public final static double TOP_EXTENSION = 494;
