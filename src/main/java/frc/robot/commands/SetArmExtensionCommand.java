@@ -25,8 +25,8 @@ public class SetArmExtensionCommand extends PIDCommand {
         () -> setpoint,
         // This uses the output
         output -> {
-          if (Math.abs(output) < 0.2) {
-            output = (Math.abs(output)/output)*0.2;
+          if (Math.abs(output) < 0.3) {
+            output = (Math.abs(output)/output)*0.3;
           }
           //Yes, it is probably possible to make this cleaner/more effcient. No, I do not in fact care.
           /*if (Math.abs(output) > 0.7) {

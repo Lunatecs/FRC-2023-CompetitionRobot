@@ -5,23 +5,20 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.WristSubsystem;
+import frc.robot.utils.SetPointSupplier;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoChargingStation extends SequentialCommandGroup {
-  /** Creates a new AutoChargingStation. */
-
-  public AutoChargingStation(DrivetrainSubsystem drivetrain) {
-    
+public class SetWristAngleAndLockCommand extends SequentialCommandGroup {
+  /** Creates a new SetWristAngleAndLockCommand. */
+  public SetWristAngleAndLockCommand(WristSubsystem wrist, double setpoint) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoMoveCommand(-145, drivetrain, .6, 0.25),
-      new AutoMoveCommand(69, drivetrain, .55, 0.25),
-      new AutoBalanceCommand(drivetrain)
+      new SetWristAngleCommand(wrist, setpoint),
+      new WristBrakeCommand(new SetPointSupplier(), wrist)
     );
   }
 }

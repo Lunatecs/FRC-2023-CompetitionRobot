@@ -41,8 +41,9 @@ public final class Constants {
   public final static class ElevatorConstants{
     public final static int ELEVATOR_MOTOR = 5;
     public static final int LIMIT_SWITCH = 9;
-    public static final double MAX_HEIGHT = -95000;//-95000;//-98000;//-101000; //-182000 (old)
-    public static final double MID_HEIGHT = -57000;//-60000;//-63000; //-135972 (old)
+    public static final double MAX_HEIGHT = -86000;//-95000;//-95000;//-98000;//-101000; //-182000 (old)
+    public static final double STATION_HEIGHT = -101000;
+    public static final double MID_HEIGHT = -53000;//-57000;//-60000;//-63000; //-135972 (old)
     public static final double BOTTOM = 0;
   }
 
@@ -85,9 +86,10 @@ public final class Constants {
 
   public final static class WristConstants{
     public final static int WRIST_MOTOR = 6;
-    public final static double WRIST_HOME = 2500;
-    public final static double CONE_SETPOINT = 20000;
-    public final static double GROUND_INTAKE = 42000;
+    public final static double WRIST_HOME = 5000;
+    public final static double CONE_SETPOINT = 24000;
+    public final static double GROUND_INTAKE_CONE = 40000;
+    public final static double GROUND_INTAKE_CUBE = 47000; 
     //These will be made for cones, but it is likely that cubes will require a seperate constant.
     //public final static double STATION_INTAKE = ;
   }
@@ -101,9 +103,7 @@ public final class Constants {
     public final static double FIRE_MED =  -0.59;
     public final static double SOLID_GREEN = 0.71;
     public final static double CONFETTI = -0.87;
+    public final static double SOLID_VIOLET = 0.91;
   }
 
-  /*public static enum LEDModes { (Temporarily commented out until we get the enum to work properly.)
-    YELLOW, PURPLE, PARTY_MODE
-  }*/
 }

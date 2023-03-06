@@ -12,8 +12,9 @@ import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutoChargingStation;
 import frc.robot.commands.AutoMoveCommand;
+import frc.robot.commands.AutoSchmooveCommand;
 import frc.robot.commands.Autos;
-import frc.robot.commands.DeliverConeTopCommand;
+import frc.robot.commands.AutoDeliverConeTopCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockArmCommand;
 import frc.robot.commands.LockElevatorCommand;
@@ -23,6 +24,7 @@ import frc.robot.commands.SetArmExtensionCommand;
 import frc.robot.commands.SetElevatorPositionCommand;
 import frc.robot.commands.SetOtherLevelsCommand;
 import frc.robot.commands.SetTopLevelCommand;
+import frc.robot.commands.SetWristAngleAndLockCommand;
 import frc.robot.commands.SetWristAngleCommand;
 import frc.robot.commands.WristBrakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -96,7 +98,8 @@ public class RobotContainer {
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
     autoChooser.addOption("Move Forward", new AutoMoveCommand(145, drivetrain, 0.5, 0.25));
     autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
-    autoChooser.addOption("Deliver Cone Top", new DeliverConeTopCommand(elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Cone Top", new AutoDeliverConeTopCommand(elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
     SmartDashboard.putData(autoChooser);
   }
 
@@ -107,7 +110,7 @@ public class RobotContainer {
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, 
     () -> driverJoystick.getRawButton(JoystickConstants.RIGHT_BUMPER), 
     () -> driverJoystick.getRawButton(JoystickConstants.LEFT_BUMPER)));
-    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.2), intake));
+    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.15), intake));
     arm.setDefaultCommand(new LockArmCommand(arm, new SetPointSupplier()));
     //led.setDefaultCommand(new ToggleLED(led));
     //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
@@ -139,7 +142,7 @@ public class RobotContainer {
 
 
     //Auto Balance Button
-    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new AutoBalanceCommand(drivetrain, .5))
+    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new AutoBalanceCommand(drivetrain))
                                                                     .onFalse(new InstantCommand(() -> {}, drivetrain));
 
     
@@ -155,7 +158,7 @@ public class RobotContainer {
     new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, 0, WristConstants.WRIST_HOME));
                                                                         //.onFalse(new InstantCommand(() -> {}, elevator));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.MAX_HEIGHT, WristConstants.GROUND_INTAKE));
+    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.STATION_HEIGHT, WristConstants.GROUND_INTAKE_CONE));
 
     new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.MID_HEIGHT, WristConstants.CONE_SETPOINT));
                                                                         //.onFalse(new InstantCommand(() -> {}, elevator));
@@ -185,11 +188,25 @@ public class RobotContainer {
     new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new WristBrakeCommand(new SetPointSupplier(), wrist))
                                                                         .onFalse(new InstantCommand(() -> {}, wrist));
     //Setpoint Wrist Control
-    new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetWristAngleCommand(wrist, WristConstants.GROUND_INTAKE))
-                                                                    .onFalse(new WristBrakeCommand(new SetPointSupplier(), wrist));// Temporarily set like this for testing purposes
-                                                                                // WristBrakeCommand could be made a default command
-                                                                      //.onFalse(new SetWristAngleCommand(wrist, 0));
-    }
+    new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.GROUND_INTAKE_CONE));
+
+    new JoystickButton(driverJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.GROUND_INTAKE_CUBE));
+    
+    new JoystickButton(driverJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.WRIST_HOME));
+  
+    //LED Controls
+    new JoystickButton(operatorJoystick, JoystickConstants.RIGHT_BUMPER).onTrue(new RunCommand(() -> {
+                                                                                  led.removeColor(led.INTAKE_CONE);
+                                                                                  led.addColor(led.INTAKE_CUBE);
+                                                                                }, led))
+                                                                        .onFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CUBE), led));
+
+    new JoystickButton(operatorJoystick, JoystickConstants.LEFT_BUMPER).onTrue(new RunCommand(() -> {
+                                                                                  led.removeColor(led.INTAKE_CUBE);
+                                                                                  led.addColor(led.INTAKE_CONE);
+                                                                                }, led))
+                                                                       .onFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CONE), led));
+  }
 
 
 

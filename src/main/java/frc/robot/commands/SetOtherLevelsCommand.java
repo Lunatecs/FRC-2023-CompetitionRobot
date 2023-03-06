@@ -21,8 +21,8 @@ public class SetOtherLevelsCommand extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SetWristAngleCommand(wrist, WristConstants.WRIST_HOME),
-      new SetArmExtensionCommand(0, arm),
+      new SetArmExtensionCommand(0, arm),  
+    new SetWristAngleCommand(wrist, WristConstants.WRIST_HOME),
       new SetEndableElevatorPositionCommand(elevator, setpoint, 0.00006),
       new ParallelCommandGroup(
         new SequentialCommandGroup(
@@ -36,4 +36,18 @@ public class SetOtherLevelsCommand extends SequentialCommandGroup {
 
     addRequirements(elevator, arm, wrist);
   }
+
+  public SetOtherLevelsCommand(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist, double setpoint, double wristSetpoint, boolean endable) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(
+      new SetArmExtensionCommand(0, arm),  
+      new SetWristAngleCommand(wrist, WristConstants.WRIST_HOME),
+      new SetEndableElevatorPositionCommand(elevator, setpoint, 0.00006),
+      new SetWristAngleCommand(wrist, wristSetpoint)
+    );
+
+    addRequirements(elevator, arm, wrist);
+  }
+
 }

@@ -17,10 +17,10 @@ public class AutoBalanceCommand extends PIDCommand {
 
   private DrivetrainSubsystem drivetrain;
 
-  public AutoBalanceCommand(DrivetrainSubsystem drivetrain, double speed) {
+  public AutoBalanceCommand(DrivetrainSubsystem drivetrain) {
     super(
         // The controller that the command will use
-        new PIDController(0.6, 0, 0.0),
+        new PIDController(0.165, 0, 0.0),
         // This should return the measurement
         () -> drivetrain.getPitch(),
         // This should return the setpoint (can also be a constant)
@@ -28,10 +28,10 @@ public class AutoBalanceCommand extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          SmartDashboard.putNumber("output", output);
-          if(Math.abs(output)>0.325) {
+          SmartDashboard.putNumber("Auto output", output);
+          /*if(Math.abs(output)>0.325) {
             output = Math.signum(output) * 0.325;
-          }
+          }*/
           drivetrain.arcadeDrive(-output, 0);
         });
     // Use addRequirements() here to declare subsystem dependencies.
@@ -48,11 +48,19 @@ public class AutoBalanceCommand extends PIDCommand {
     SmartDashboard.putNumber("balance error", this.getController().getPositionError());
     SmartDashboard.putNumber("balance set point", this.getController().getSetpoint());
     SmartDashboard.putNumber("balance  pitch", drivetrain.getPitch());
+    SmartDashboard.putBoolean("balance isfinished", Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance());
     super.execute();
   }
 
   @Override
   public boolean isFinished() {
+    //return Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance();
     return false;
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    super.end(interrupted);
+    drivetrain.arcadeDrive(0, 0);
   }
 }

@@ -20,21 +20,22 @@ import frc.robot.subsystems.WristSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class DeliverConeTopCommand extends SequentialCommandGroup {
+public class AutoDeliverConeTopCommand extends SequentialCommandGroup {
   /** Creates a new DeliverConeTopCommand. */
-  public DeliverConeTopCommand(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist, IntakeSubsystem intake) {
+  public AutoDeliverConeTopCommand(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist, IntakeSubsystem intake) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new SetWristAngleCommand(wrist, 0),
+      new InstantCommand(() -> intake.runIntake(-0.15), intake),
+      new SetWristAngleCommand(wrist, WristConstants.WRIST_HOME),
       new SetArmExtensionCommand(0, arm),  
-      new SetEndableElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.0000575),
-      new SetArmExtensionCommand(ArmConstants.TOP_EXTENSION-20.0, arm),
+      new SetEndableElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.00006),
+      new SetArmExtensionCommand(ArmConstants.TOP_EXTENSION, arm),
       new SetWristAngleCommand(wrist, WristConstants.CONE_SETPOINT),
-      new InstantCommand(() -> intake.runIntake(1), intake),
+      new InstantCommand(() -> intake.runIntake(.75), intake),
       new WaitCommand(0.5),
       new InstantCommand(() -> intake.runIntake(0), intake),
-      new SetOtherLevelsCommand(elevator, arm, wrist, 0, 0)
+      new SetOtherLevelsCommand(elevator, arm, wrist, 0, WristConstants.WRIST_HOME, true)
     );
     addRequirements(elevator, arm, wrist, intake);
   }
