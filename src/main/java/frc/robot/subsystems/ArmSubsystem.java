@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
@@ -23,18 +24,13 @@ public class ArmSubsystem extends SubsystemBase {
   /** Creates a new ArmSubsystem. 
    * (The arm is what moves the intake back and forth)
   */
-  private final WPI_TalonSRX armMotor = new WPI_TalonSRX(ArmConstants.ARM_MOTOR);
+  private final WPI_TalonFX armMotor = new WPI_TalonFX(ArmConstants.ARM_MOTOR);
   private final DigitalInput armLimitSwitch = new DigitalInput(ArmConstants.LIMIT_SWITCH);
-  private final CANCoder armEncoder = new CANCoder(ArmConstants.ARM_ENCODER);
   private PIDController pidController = null;
 
   public ArmSubsystem() {
     armMotor.configFactoryDefault();
     armMotor.setNeutralMode(NeutralMode.Brake);
-    armEncoder.configFactoryDefault();
-    CANCoderConfiguration config = new CANCoderConfiguration();
-    armEncoder.configAllSettings(config);
-    armEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10);
     pidController = new PIDController(0.01, 0.0, 0.0);
     pidController.setTolerance(40);
   }
@@ -69,7 +65,7 @@ public class ArmSubsystem extends SubsystemBase {
   }
 
   public double getArmEncoder() {
-    return armEncoder.getPosition();
+    return armMotor.getSelectedSensorPosition();
   }
 
   public boolean getArmLimitSwitch() {
@@ -81,6 +77,6 @@ public class ArmSubsystem extends SubsystemBase {
   }
  
   public void resetEncoders() {
-    armEncoder.setPosition(0);
+    armMotor.setSelectedSensorPosition(0);
   }
 }

@@ -52,7 +52,7 @@ public final class Constants {
     public final static int LIMIT_SWITCH = 8;
     public final static double MAX_EXTENSION = 740.0;
     public final static double TOP_EXTENSION = 494;
-    public final static int ARM_ENCODER = 20;
+    public final static String Joe = "Joe mother";
   }
 
   public final static class JoystickConstants{

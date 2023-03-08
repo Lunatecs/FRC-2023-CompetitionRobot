@@ -17,6 +17,7 @@ public class LimelightSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
+  //Due to the nature of the limelight's mounting, we will be swapping the X and Y values (Limelight rotated 90 degrees)
   public double getTX() {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0.0);
   }
