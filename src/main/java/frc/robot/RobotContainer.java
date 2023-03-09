@@ -133,11 +133,10 @@ public class RobotContainer {
 
     //Driver Controller Button Bindings
     //Intake
-    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake, led))
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake))
                                                                                                            .onFalse(new InstantCommand(() -> {}, intake));
-                                                                                                         //.onFalse(new RunCommand(() -> intake.runIntake(0), intake));
 
-    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake, led))
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake))
                                                                                                           .onFalse(new InstantCommand(() -> {}, intake));
 
 
@@ -196,16 +195,16 @@ public class RobotContainer {
   
     //LED Controls
     new JoystickButton(operatorJoystick, JoystickConstants.RIGHT_BUMPER).onTrue(new RunCommand(() -> {
-                                                                                  led.removeColor(led.INTAKE_CONE);
-                                                                                  led.addColor(led.INTAKE_CUBE);
+                                                                                  led.removeColorFront(led.INTAKE_CONE);
+                                                                                  led.addColorFront(led.INTAKE_CUBE);
                                                                                 }, led))
-                                                                        .onFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CUBE), led));
+                                                                        .onFalse(new RunCommand(() -> led.removeColorFront(led.INTAKE_CUBE), led));
 
     new JoystickButton(operatorJoystick, JoystickConstants.LEFT_BUMPER).onTrue(new RunCommand(() -> {
-                                                                                  led.removeColor(led.INTAKE_CUBE);
-                                                                                  led.addColor(led.INTAKE_CONE);
+                                                                                  led.removeColorFront(led.INTAKE_CUBE);
+                                                                                  led.addColorFront(led.INTAKE_CONE);
                                                                                 }, led))
-                                                                       .onFalse(new RunCommand(() -> led.removeColor(led.INTAKE_CONE), led));
+                                                                       .onFalse(new RunCommand(() -> led.removeColorFront(led.INTAKE_CONE), led));
   }
 
 

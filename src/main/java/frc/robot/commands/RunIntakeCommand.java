@@ -19,10 +19,10 @@ public class RunIntakeCommand extends CommandBase {
   DoubleSupplier intakeSpeed;
   boolean finished = false;
 
-  public RunIntakeCommand(DoubleSupplier speed, IntakeSubsystem intake, LEDSubsystem led) {
+  public RunIntakeCommand(DoubleSupplier speed, IntakeSubsystem intake) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.intake = intake;
-    this.led = led;
+    this.led = LEDSubsystem.getInstance();
     intakeSpeed = speed;
     addRequirements(intake);
 
@@ -42,7 +42,7 @@ public class RunIntakeCommand extends CommandBase {
 
     if (intake.tripLimit()) {
       intake.runIntake(0);
-      //led.getBackInstance().addColor(led.PICKED_UP);
+      led.addColorBack(led.PICKED_UP);
       finished = true;
     } else {
       intake.runIntake(intakeSpeed.getAsDouble());
