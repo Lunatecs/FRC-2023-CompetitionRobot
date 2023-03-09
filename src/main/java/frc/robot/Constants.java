@@ -44,14 +44,14 @@ public final class Constants {
     public static final double MAX_HEIGHT = -86000;//-95000;//-95000;//-98000;//-101000; //-182000 (old)
     public static final double STATION_HEIGHT = -101000;
     public static final double MID_HEIGHT = -53000;//-57000;//-60000;//-63000; //-135972 (old)
-    public static final double BOTTOM = 0;
+    public static final double BOTTOM = -7000;
   }
 
   public final static class ArmConstants {
-    public final static int ARM_MOTOR = 8; 
+    public final static int ARM_MOTOR = 10; 
     public final static int LIMIT_SWITCH = 8;
-    public final static double MAX_EXTENSION = 740.0;
-    public final static double TOP_EXTENSION = 494;
+    public final static double MAX_EXTENSION = 28918;
+    public final static double TOP_EXTENSION = 19781;
     public final static String Joe = "Joe mother";
   }
 

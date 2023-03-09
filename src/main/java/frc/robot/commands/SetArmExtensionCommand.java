@@ -18,7 +18,7 @@ public class SetArmExtensionCommand extends PIDCommand {
   public SetArmExtensionCommand(double setpoint, ArmSubsystem arm) {
     super(
         // The controller that the command will use
-        new PIDController(0.009, 0, 0),
+        new PIDController(0.00006, 0, 0),
         // This should return the measurement
         () -> arm.getArmEncoder(),
         // This should return the setpoint (can also be a constant)
@@ -43,7 +43,7 @@ public class SetArmExtensionCommand extends PIDCommand {
   @Override
   public void initialize() {
     super.initialize();
-    this.getController().setTolerance(5);
+    this.getController().setTolerance(500);
   }
 
   @Override

@@ -18,7 +18,7 @@ public class LockArmCommand extends PIDCommand {
   public LockArmCommand(ArmSubsystem arm, SetPointSupplier setpoint) {
     super(
         // The controller that the command will use
-        new PIDController(0.009, 0, 0),
+        new PIDController(0.00009, 0, 0),
         // This should return the measurement
         () -> arm.getArmEncoder(),
         // This should return the setpoint (can also be a constant)

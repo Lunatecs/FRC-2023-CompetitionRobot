@@ -17,13 +17,14 @@ import frc.robot.utils.SetPointSupplier;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class SetOtherLevelsCommand extends SequentialCommandGroup {
   /** I HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDSI HATE NAMING COMMANDS */
-  public SetOtherLevelsCommand(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist, double setpoint, double wristSetpoint) {
+  public SetOtherLevelsCommand(ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist, double setpoint, double wristSetpoint, double elevatorP) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new SetArmExtensionCommand(0, arm),  
     new SetWristAngleCommand(wrist, WristConstants.WRIST_HOME),
-      new SetEndableElevatorPositionCommand(elevator, setpoint, 0.00006),
+      new SetEndableElevatorPositionCommand(elevator, setpoint, elevatorP),//0.00006
+      new ElevatorBottomCommand(setpoint, elevator),
       new ParallelCommandGroup(
         new SequentialCommandGroup(
           new SetWristAngleCommand(wrist, wristSetpoint),
