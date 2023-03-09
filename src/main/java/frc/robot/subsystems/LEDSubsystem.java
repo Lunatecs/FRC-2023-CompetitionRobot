@@ -7,17 +7,19 @@ package frc.robot.subsystems;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import com.fasterxml.jackson.databind.introspect.DefaultAccessorNamingStrategy;
+
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LEDConstants;
 
 public class LEDSubsystem extends SubsystemBase {
   private static LEDSubsystem ledSubsystem = null;
-  private Spark ledControl = new Spark(0);
-  private Spark backLED = new Spark(1);
-  private LEDBack ledBack;
+  private Spark ledFrontControl = new Spark(0);
+  private Spark ledBackControl = new Spark(1);
 
-  private PriorityQueue<PriorityColor> queue = null;
+  private PriorityQueue<PriorityColor> frontQueue = null;
+  private PriorityQueue<PriorityColor> backQueue = null;
   
 
   public final PriorityColor DEFAULT = new PriorityColor(LEDConstants.FIRE_MED, 100, "fire");
@@ -28,14 +30,11 @@ public class LEDSubsystem extends SubsystemBase {
 
   
   private LEDSubsystem() {
-    ledBack = new LEDBack();
-    queue = new PriorityQueue<PriorityColor>(new PriorityColor());
-    addDefaultColor();
+    //ledBack = new LEDBack();
+    frontQueue = new PriorityQueue<PriorityColor>(new PriorityColor());
+    backQueue = new PriorityQueue<PriorityColor>(new PriorityColor());
     
-  }
-
-  public boolean queueContains(PriorityColor color) {
-    return queue.contains(color);
+    frontQueue.add(DEFAULT);
   }
 
   public static LEDSubsystem getInstance() {
@@ -45,33 +44,50 @@ public class LEDSubsystem extends SubsystemBase {
     return ledSubsystem;
   }
 
-  public LEDBack getBackInstance() {
-    return ledBack;
+  public boolean frontQueueContains(PriorityColor color) {
+    return frontQueue.contains(color);
   }
 
-  public void addColor(PriorityColor color) {
-    if(!queue.contains(color)) {
-      queue.add(color);
+  public boolean backQueueContains(PriorityColor color) {
+    return backQueue.contains(color);
+  }
+
+  public void addColorFront(PriorityColor color) {
+    if(!frontQueue.contains(color)) {
+      frontQueue.add(color);
     }
   }
 
-  public void removeColor(PriorityColor color) {
-    if(queue.contains(color)) {
-      queue.remove(color);
+  public void addColorBack(PriorityColor color) {
+    if(!backQueue.contains(color)) {
+      backQueue.add(color);
     }
   }
 
-  private void addDefaultColor() {
-    queue.add(DEFAULT);
+  public void removeColorFront(PriorityColor color) {
+    if(frontQueue.contains(color)) {
+      frontQueue.remove(color);
+    }
   }
 
-  public void ledTest() {
-    ledControl.set(-.25);
+  public void removeColorBack(PriorityColor color) {
+    if(backQueue.contains(color)) {
+      backQueue.remove(color);
+    }
   }
 
-  public String printQueue() {
+  public String printQueueFront() {
     String queueItems = "";
-    for (PriorityColor color : queue) {
+    for (PriorityColor color : frontQueue) {
+      queueItems += color.name + ": " + color.priority + ", ";
+    }
+    
+    return queueItems;  
+  }
+
+  public String printQueueBack() {
+    String queueItems = "";
+    for (PriorityColor color : backQueue) {
       queueItems += color.name + ": " + color.priority + ", ";
     }
     
@@ -80,63 +96,12 @@ public class LEDSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*try {
-      ledControl.set(queue.peek().color);
-      backLED.set(ledBack.getColor());
-    } catch (NullPointerException e) {
-      System.err.println("queue is empty");
-    }*/
-
-    ledControl.set(queue.peek().color);
-    backLED.set(ledBack.getColor());
+    ledFrontControl.set(frontQueue.peek().color);
+    ledBackControl.set(backQueue.peek().color);
     
-    //ledTest();
   }
 
-  public class LEDBack {
-    private PriorityQueue<PriorityColor> queue2 = null;
-    LEDBack ledBack;
-
-    private LEDBack() {
-      queue2 = new PriorityQueue<PriorityColor>(new PriorityColor());
-    }
-/* 
-    public LEDBack getInstance() {
-      if (ledBack == null) {
-        ledBack = new LEDBack();
-      }
-      return ledBack;
-    }
-*/
-    public double getColor() {
-      if(queue2.peek() == null) {
-        return .93; // solid white (default for back led)
-      }
-      return queue2.peek().color;
-    }
-
-    public void addColor(PriorityColor color) {
-      if(!queue2.contains(color)) {
-        queue2.add(color);
-      }
-    }
-
-    public void removeColor(PriorityColor color) {
-      if(queue2.contains(color)) {
-        queue2.remove(color);
-      }
-    }
-
-    public String getQueueString() {
-      String queueItems = "";
-      for (PriorityColor color : queue2) {
-        queueItems += color.name + ": " + color.priority + ", ";
-      }
-    
-      return queueItems;
-    }
-
-  }
+  
 
   private class PriorityColor implements Comparator<PriorityColor>, Comparable<PriorityColor> {
 
