@@ -104,6 +104,7 @@ public final class Constants {
     public final static double SOLID_GREEN = 0.71;
     public final static double CONFETTI = -0.87;
     public final static double SOLID_VIOLET = 0.91;
+    public final static double SOLID_WHITE = 0.93;
   }
 
 }

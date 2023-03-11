@@ -27,6 +27,7 @@ public class LEDSubsystem extends SubsystemBase {
   public final PriorityColor INTAKE_CONE = new PriorityColor(LEDConstants.STROBE_GOLD, 31, "cone"); // 30
   public final PriorityColor INTAKE_CUBE = new PriorityColor(LEDConstants.SOLID_VIOLET, 30, "cube");
   public final PriorityColor PICKED_UP = new PriorityColor(LEDConstants.SOLID_GREEN, 25, "picked up");
+  public final PriorityColor DEFAULT_BACK = new PriorityColor(LEDConstants.SOLID_WHITE, 100, "white");
 
   
   private LEDSubsystem() {
@@ -35,6 +36,7 @@ public class LEDSubsystem extends SubsystemBase {
     backQueue = new PriorityQueue<PriorityColor>(new PriorityColor());
     
     frontQueue.add(DEFAULT);
+    backQueue.add(DEFAULT_BACK);
   }
 
   public static LEDSubsystem getInstance() {
