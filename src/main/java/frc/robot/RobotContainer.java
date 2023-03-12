@@ -33,6 +33,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.WristSubsystem;
 import frc.robot.utils.SetPointSupplier;
 import edu.wpi.first.wpilibj.Joystick;
@@ -70,6 +71,7 @@ public class RobotContainer {
   private final WristSubsystem wrist = new WristSubsystem();
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LEDSubsystem led = LEDSubsystem.getInstance();
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
 
 
   private final Joystick driverJoystick = new Joystick(Constants.JoystickConstants.DRIVER_USB);

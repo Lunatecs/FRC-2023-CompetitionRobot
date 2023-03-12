@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -43,7 +44,7 @@ public class SetArmExtensionCommand extends PIDCommand {
   @Override
   public void initialize() {
     super.initialize();
-    this.getController().setTolerance(500);
+    this.getController().setTolerance(ArmConstants.ARM_TOLERANCE);
   }
 
   @Override

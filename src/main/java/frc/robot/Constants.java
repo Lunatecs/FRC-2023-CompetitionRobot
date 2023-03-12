@@ -51,8 +51,9 @@ public final class Constants {
     public final static int ARM_MOTOR = 10; 
     public final static int LIMIT_SWITCH = 8;
     public final static double MAX_EXTENSION = 28918;
-    public final static double TOP_EXTENSION = 19781;
+    public final static double TOP_EXTENSION = 20781;
     public final static String Joe = "Joe mother";
+    public final static double ARM_TOLERANCE = 500;
   }
 
   public final static class JoystickConstants{

@@ -4,17 +4,29 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase {
   /** Creates a new LimelightSubsystem. */
-  public LimelightSubsystem() {}
+  SimpleWidget toggleLED;
+
+  public LimelightSubsystem() {
+    CameraServer.startAutomaticCapture(0);
+
+    toggleLED = Shuffleboard.getTab("Cameras")
+                            .add("Limelight LED", false)
+                            .withWidget(BuiltInWidgets.kToggleButton);
+  }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    setLights(toggleLED.getEntry().get().getBoolean());
   }
 
   //Due to the nature of the limelight's mounting, we will be swapping the X and Y values (Limelight rotated 90 degrees)
