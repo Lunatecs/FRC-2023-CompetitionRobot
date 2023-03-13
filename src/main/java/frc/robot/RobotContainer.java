@@ -11,6 +11,7 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutoChargingStation;
+import frc.robot.commands.AutoDeliverConeAndDrive;
 import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.AutoSchmooveCommand;
 import frc.robot.commands.Autos;
@@ -102,6 +103,7 @@ public class RobotContainer {
     autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
     autoChooser.addOption("Deliver Cone Top", new AutoDeliverConeTopCommand(elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Top Cone and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Cone and Drive Forward", new AutoDeliverConeAndDrive(drivetrain, elevator, arm, wrist, intake));
     SmartDashboard.putData(autoChooser);
   }
 
