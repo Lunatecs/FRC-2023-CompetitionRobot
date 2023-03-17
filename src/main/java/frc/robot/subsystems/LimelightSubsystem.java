@@ -38,11 +38,21 @@ public class LimelightSubsystem extends SubsystemBase {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0.0);
   }
 
+  public double getArea() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    return table.getEntry("ta").getDouble(0.0);
+  }
+
   public void setPipeline(int pipeline){
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pipeline);
   }
 
   public void setLights(boolean isOn) {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(1);
+  }
+
+  public boolean isOnTarget() {
+    NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+    return this.isValidTarget() && Math.abs(this.getTX()) <=1.5;
   }
 }
