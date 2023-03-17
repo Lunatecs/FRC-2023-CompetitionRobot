@@ -112,7 +112,7 @@ public class RobotContainer {
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, 
     () -> driverJoystick.getRawButton(JoystickConstants.RIGHT_BUMPER), 
     () -> driverJoystick.getRawButton(JoystickConstants.LEFT_BUMPER)));
-    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.15), intake));
+    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.2), intake));
     arm.setDefaultCommand(new LockArmCommand(arm, new SetPointSupplier()));
     //led.setDefaultCommand(new ToggleLED(led));
     //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
@@ -138,11 +138,12 @@ public class RobotContainer {
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake))
                                                                                                            .onFalse(new InstantCommand(() -> {}, intake));
 
-    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake))
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new ParallelCommandGroup(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake), 
+                                                                                                                  new RunCommand(() -> led.removeColorBack(led.PICKED_UP))))
                                                                                                           .onFalse(new InstantCommand(() -> {}, intake));
 
 
-    //Auto Balance Button
+    //Auto Balance Button.
     new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new AutoBalanceCommand(drivetrain))
                                                                     .onFalse(new InstantCommand(() -> {}, drivetrain));
 

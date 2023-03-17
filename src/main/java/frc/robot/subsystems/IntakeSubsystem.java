@@ -57,7 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public boolean tripLimit() {
-    if(intakeMotor.getStatorCurrent() > 70) {
+    if(Math.abs(getStatorCurrent()) > 70) {
       return true;
     }
     return false;

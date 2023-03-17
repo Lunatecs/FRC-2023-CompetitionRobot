@@ -19,7 +19,7 @@ public class AutoChargingStation extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoMoveCommand(-145, drivetrain, .6, 0.25),
+      new AutoMoveCommand(-146, drivetrain, .6, 0.25),
       new AutoMoveCommand(69, drivetrain, .55, 0.25),
       new AutoBalanceCommand(drivetrain)
     );

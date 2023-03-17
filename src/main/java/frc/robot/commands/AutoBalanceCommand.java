@@ -20,7 +20,7 @@ public class AutoBalanceCommand extends PIDCommand {
   public AutoBalanceCommand(DrivetrainSubsystem drivetrain) {
     super(
         // The controller that the command will use
-        new PIDController(0.165, 0, 0.0),
+        new PIDController(0.165, 0.0165, 0.0),
         // This should return the measurement
         () -> drivetrain.getPitch(),
         // This should return the setpoint (can also be a constant)
