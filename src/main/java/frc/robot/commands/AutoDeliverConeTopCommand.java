@@ -33,7 +33,7 @@ public class AutoDeliverConeTopCommand extends SequentialCommandGroup {
       new SetArmExtensionCommand(ArmConstants.TOP_EXTENSION, arm),
       new SetWristAngleCommand(wrist, WristConstants.CONE_SETPOINT),
       new WaitCommand(0.5),
-      new InstantCommand(() -> intake.runIntake(.60), intake),
+      new InstantCommand(() -> intake.runIntake(.55), intake),
       new WaitCommand(0.5),
       new InstantCommand(() -> intake.runIntake(0), intake),
       new SetOtherLevelsCommand(elevator, arm, wrist, 0, WristConstants.WRIST_HOME, true)

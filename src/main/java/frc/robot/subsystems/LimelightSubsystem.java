@@ -55,4 +55,8 @@ public class LimelightSubsystem extends SubsystemBase {
     NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
     return this.isValidTarget() && Math.abs(this.getTX()) <=1.5;
   }
+
+  public boolean isValidTarget() {
+    return false;
+  }
 }

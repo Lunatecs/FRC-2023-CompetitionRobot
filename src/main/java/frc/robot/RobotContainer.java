@@ -11,6 +11,7 @@ import frc.robot.Constants.WristConstants;
 import frc.robot.commands.ArcadeDriveCommand;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutoChargingStation;
+import frc.robot.commands.AutoDeliverConeAndBalaceCommand;
 import frc.robot.commands.AutoDeliverConeAndDrive;
 import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.AutoSchmooveCommand;
@@ -102,7 +103,8 @@ public class RobotContainer {
     autoChooser.addOption("Move Forward", new AutoMoveCommand(145, drivetrain, 0.5, 0.25));
     autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
     autoChooser.addOption("Deliver Cone Top", new AutoDeliverConeTopCommand(elevator, arm, wrist, intake));
-    autoChooser.addOption("Deliver Top Cone and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone, Exit Community, and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone and Balance", new AutoDeliverConeAndBalaceCommand(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Cone and Drive Forward", new AutoDeliverConeAndDrive(drivetrain, elevator, arm, wrist, intake));
     SmartDashboard.putData(autoChooser);
   }
@@ -143,7 +145,11 @@ public class RobotContainer {
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new ParallelCommandGroup(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake), 
                                                                                                                   new RunCommand(() -> led.removeColorBack(led.PICKED_UP))))
                                                                                                           .onFalse(new InstantCommand(() -> {}, intake));
+    new POVButton(driverJoystick, JoystickConstants.POV_DOWN).onTrue(new RunIntakeCommand(() -> 0.3, intake))
+                                                              .onFalse(new InstantCommand(() -> {}, intake));
 
+    new POVButton(driverJoystick, JoystickConstants.POV_UP).onTrue(new RunIntakeCommand(() -> 0.5, intake))
+                                                              .onFalse(new InstantCommand(() -> {}, intake));
 
     //Auto Balance Button.
     new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new AutoBalanceCommand(drivetrain))
@@ -152,10 +158,10 @@ public class RobotContainer {
     
     //Manual Elevator Buttons
     
-    new POVButton(operatorJoystick, JoystickConstants.POV_UP).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setSpeed(-1), elevator)))
+    new POVButton(operatorJoystick, JoystickConstants.POV_UP).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setSpeed(-0.5), elevator)))
                                                                               .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
     
-    new POVButton(operatorJoystick, JoystickConstants.POV_DOWN).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setSpeed(1), elevator)))
+    new POVButton(operatorJoystick, JoystickConstants.POV_DOWN).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setSpeed(0.5), elevator)))
                                                                               .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator)); 
 
     //Elevator Setpoints
@@ -170,6 +176,7 @@ public class RobotContainer {
     new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator, wrist)); 
 
     //Manual Arm Buttons
+    /*
     new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm))
                                                                       //.onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
                                                                       .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
@@ -183,7 +190,7 @@ public class RobotContainer {
     new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).onTrue(new SetArmExtensionCommand(514, arm));
 
     new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).onTrue(new SetArmExtensionCommand(0, arm));
-
+     */
     //Manual Wrist Control
     new Trigger(() -> {return Math.abs(operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)) > 0.2;}).whileTrue(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)))
                                                                                                             //.onFalse(new RunCommand(() -> wrist.turnWrist(0), wrist));

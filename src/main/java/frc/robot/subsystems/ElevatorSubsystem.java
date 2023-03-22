@@ -23,6 +23,7 @@ public class ElevatorSubsystem extends SubsystemBase {
   public ElevatorSubsystem() {
     elevatorMotor.configFactoryDefault();
     resetEncoders();
+    elevatorMotor.setInverted(true);
     elevatorMotor.setNeutralMode(NeutralMode.Brake);
     pidController = new PIDController(0.0001, 0.0, 0.0);
     pidController.setTolerance(500);  
