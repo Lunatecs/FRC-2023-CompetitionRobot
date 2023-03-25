@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DevilHornConstants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.WristConstants;
@@ -30,6 +31,7 @@ import frc.robot.commands.SetWristAngleAndLockCommand;
 import frc.robot.commands.SetWristAngleCommand;
 import frc.robot.commands.WristBrakeCommand;
 import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.DevilHornSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -74,6 +76,7 @@ public class RobotContainer {
   private final ArmSubsystem arm = new ArmSubsystem();
   private final LEDSubsystem led = LEDSubsystem.getInstance();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
+  private final DevilHornSubsystem devilHorn = new DevilHornSubsystem();
 
 
   private final Joystick driverJoystick = new Joystick(Constants.JoystickConstants.DRIVER_USB);
@@ -136,6 +139,19 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+    //Devil Horns Button Bindings
+    new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
+                                                                      .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
+                                            
+    new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.dropForks(true), devilHorn)))
+                                                                      .onFalse(new RunCommand(() -> devilHorn.dropForks(false), devilHorn));
+    
+    new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
+                                                                      .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
+                                            
+    new JoystickButton(operatorJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.dropForks(true), devilHorn)))
+                                                                      .onFalse(new RunCommand(() -> devilHorn.dropForks(false), devilHorn));
 
     //Driver Controller Button Bindings
     //Intake
