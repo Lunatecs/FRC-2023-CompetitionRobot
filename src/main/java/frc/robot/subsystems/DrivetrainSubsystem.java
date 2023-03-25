@@ -28,13 +28,13 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
   private final WPI_PigeonIMU pigeon = new WPI_PigeonIMU(DrivetrainConstants.PIGEON);
 
-  private final double zeroAngle;
+  private  double zeroAngle;
+
+  public final double zeroYaw;
 
   private final DifferentialDriveOdometry odometry;
 
   private DifferentialDrive drive;
-  //This maybe be screwed up, cannot figure out distance parameter thingys
-  //private DifferentialDriveOdometry odometry = new DifferentialDriveOdometry(gyro.getRotation2d(), 0, 0);
 
   public DrivetrainSubsystem() {
     leftFront.configFactoryDefault();
@@ -59,7 +59,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
 
     pigeon.reset();
     zeroAngle = pigeon.getPitch();
-
+    zeroYaw = pigeon.getYaw();
     odometry = new DifferentialDriveOdometry(pigeon.getRotation2d(), getLeftDistance(), getRightDistance()); //Copied from wpi docs so its hit or miss
   }
   public void arcadeDrive(double speed, double rotation) {
@@ -143,8 +143,24 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return yawPitchRoll[1];
   }
 
+  public double getYaw() {
+    double [] yawPitchRoll = new double[3];
+    pigeon.getYawPitchRoll(yawPitchRoll);
+    return yawPitchRoll[0];
+  }
+
   public double getZeroAngle() {
     return zeroAngle;
   }
+
+  public double getZeroYaw(){
+    return zeroYaw;
+  }
+
+  public void resetPigeon(){
+    pigeon.reset();
+    zeroAngle = pigeon.getPitch();
+  }
+  
 
 }
