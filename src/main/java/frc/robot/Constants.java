@@ -109,4 +109,9 @@ public final class Constants {
 
   }
 
+  public final static class LimelightConstants {
+    public final static int APRILTAG_PIPELINE = 0; // change if needed
+    
+  }
+
 }
