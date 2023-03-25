@@ -109,6 +109,11 @@ public final class Constants {
 
   }
 
+  public final static class LimelightConstants {
+    public final static int APRILTAG_PIPELINE = 0; // change if needed
+    
+  }
+
   public final static class DevilHornConstants {
     public final static int FORK_MOTOR = 0; //TODO: Update fork motor CAN values
     public final static int DROP_MOTOR = 0;
