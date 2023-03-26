@@ -52,6 +52,7 @@ public final class Constants {
     public final static int LIMIT_SWITCH = 8;
     public final static double MAX_EXTENSION = 28918;
     public final static double TOP_EXTENSION = 20781;
+    public final static double GROUND_EXTENSION = 10300;
     public final static String Joe = "Joe mother";
     public final static double ARM_TOLERANCE = 500;
   }
@@ -110,7 +111,7 @@ public final class Constants {
   }
 
   public final static class LimelightConstants {
-    public final static int APRILTAG_PIPELINE = 0; // change if needed
+    public final static int APRILTAG_PIPELINE = 3; // change if needed
     
   }
 
