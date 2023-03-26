@@ -15,9 +15,12 @@ import frc.robot.commands.AutoChargingStation;
 import frc.robot.commands.AutoDeliverConeAndBalaceCommand;
 import frc.robot.commands.AutoDeliverConeAndDrive;
 import frc.robot.commands.AutoMoveCommand;
+import frc.robot.commands.AutoMoveStraightCommand;
 import frc.robot.commands.AutoSchmooveCommand;
+import frc.robot.commands.AutoTurnCommand;
 import frc.robot.commands.Autos;
 import frc.robot.commands.AutoDeliverConeTopCommand;
+import frc.robot.commands.AutoDeliverTwoGamePiece;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LockArmCommand;
 import frc.robot.commands.LockElevatorCommand;
@@ -57,6 +60,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 
 
@@ -109,6 +113,9 @@ public class RobotContainer {
     autoChooser.addOption("Deliver Top Cone, Exit Community, and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Top Cone and Balance", new AutoDeliverConeAndBalaceCommand(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Cone and Drive Forward", new AutoDeliverConeAndDrive(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Automotive Rotation", new SequentialCommandGroup(new InstantCommand(() -> drivetrain.resetPigeon()), new AutoTurnCommand(drivetrain, 155, 0.005)));
+    autoChooser.addOption("Two Game Piece :O", new AutoDeliverTwoGamePiece(elevator, intake, drivetrain, arm, wrist));
+    autoChooser.addOption("Drive Forward + Gyro Correction", new AutoMoveStraightCommand(drivetrain, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -174));
     SmartDashboard.putData(autoChooser);
   }
 

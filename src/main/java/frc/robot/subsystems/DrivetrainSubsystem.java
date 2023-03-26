@@ -58,6 +58,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     drive = new DifferentialDrive(leftFront, rightFront);
 
     pigeon.reset();
+    pigeon.calibrate();
     zeroAngle = pigeon.getPitch();
     zeroYaw = pigeon.getYaw();
     odometry = new DifferentialDriveOdometry(pigeon.getRotation2d(), getLeftDistance(), getRightDistance()); //Copied from wpi docs so its hit or miss
@@ -83,6 +84,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     //odometry.update(gyro.getRotation2d(), getLeftDistance(), getRightDistance());
  //   SmartDashboard.putNumber("Gyro", this.getAngle());
+    SmartDashboard.putNumber("Yaw", getYaw());
 
     
 
@@ -157,9 +159,14 @@ public class DrivetrainSubsystem extends SubsystemBase {
     return zeroYaw;
   }
 
+  public void setYawToZero() {
+    pigeon.setYaw(0);
+  }
+
   public void resetPigeon(){
     pigeon.reset();
-    zeroAngle = pigeon.getPitch();
+    
+    //zeroAngle = pigeon.getPitch();
   }
   
 

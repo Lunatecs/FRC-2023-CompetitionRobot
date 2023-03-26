@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -22,40 +23,47 @@ import pabeles.concurrency.ConcurrencyOps.NewInstance;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoDeliverTwoGamePiece extends SequentialCommandGroup {
   /** Creates a new AutoDeliverTwoGamePiece. */
+
+  ElevatorSubsystem elevator;
+  IntakeSubsystem intake;
+  DrivetrainSubsystem drive;
+  ArmSubsystem arm;
+  WristSubsystem wrist;
   public AutoDeliverTwoGamePiece(ElevatorSubsystem elevator, IntakeSubsystem intake, DrivetrainSubsystem drive, ArmSubsystem arm, WristSubsystem wrist) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new InstantCommand(() -> intake.runIntake(-.15), intake),
-      new SetWristAngleCommand(wrist, WristConstants.WRIST_HOME),
-      new SetArmExtensionCommand(0, arm),
-      new SetEndableElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.00006),
-      new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm),
-      new SetWristAngleCommand(wrist, WristConstants.CONE_SETPOINT),
-      new InstantCommand(() -> intake.runIntake(0.75), intake),
-      new WaitCommand(0.5),
-      new InstantCommand(() -> intake.runIntake(0), intake),
-      new SetOtherLevelsCommand(elevator, arm, wrist, 0 , WristConstants.WRIST_HOME, true),
-      new AutoMoveCommand(-174, drive, .6, .25),
-      new AutoTurnCommand(drive, 155),
-      new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm),
-      new SetWristAngleCommand(wrist, WristConstants.GROUND_INTAKE_CUBE),
-      new InstantCommand(() -> intake.runIntake(-.75), intake),
-      new WaitCommand(0.4),
+      new AutoDeliverConeTopCommand(elevator, arm, wrist, intake),
+      //new AutoMoveCommand(-174, drive, .6, .25),
+      new AutoMoveStraightCommand(drive, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -158),
+      new AutoTurnCommand(drive, -145, 0.05),
       new InstantCommand(() -> intake.runIntake(-.15)),
+     // new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm),
+      new SetWristAngleCommand(wrist, WristConstants.GROUND_INTAKE_CUBE),
+      new SetArmExtensionCommand(ArmConstants.GROUND_EXTENSION, arm),
+      new InstantCommand(() -> intake.runIntake(-.75), intake),
+      new WaitCommand(0.6),
+      //new SetArmExtensionCommand(0, arm),
       new SetOtherLevelsCommand(elevator, arm, wrist, 0, WristConstants.WRIST_HOME, true),
-      new AutoTurnCommand(drive, -155),
-      new AutoMoveCommand(174, drive, 0.6, 0.25),
+      new InstantCommand(() -> intake.runIntake(-.3)),
+      new AutoTurnCommand(drive, 150, 0.05),
+      //new AutoMoveCommand(174, drive, 0.6, 0.25),
+      new AutoMoveStraightCommand(drive, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), 156),
       new SetEndableElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.00006),
       new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm),
       new SetWristAngleCommand(wrist, WristConstants.CONE_SETPOINT),
-      new InstantCommand(() -> intake.runIntake(0.75), intake),
+      new InstantCommand(() -> intake.runIntake(0.30), intake),
       new WaitCommand(0.5),
       new SetOtherLevelsCommand(elevator, arm, wrist, 0 , WristConstants.WRIST_HOME, true),
-      new AutoTurnCommand(drive, 5)
-   
-      
-      
+      new InstantCommand(() -> intake.runIntake(0)),
+      new AutoTurnCommand(drive, 5, 0.05)   
     );
+
+    this.arm = arm;
+    this.drive = drive;
+    this.elevator = elevator;
+    this.wrist = wrist;
+    this.intake = intake;
+    addRequirements(elevator, arm, intake, drive, wrist);
   }
 }
