@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristConstants;
 
 public class WristSubsystem extends SubsystemBase {
-  TalonFX rizzMotor = new WPI_TalonFX(WristConstants.WRIST_MOTOR);
+  private TalonFX rizzMotor = new WPI_TalonFX(WristConstants.WRIST_MOTOR);
 
   public WristSubsystem() {
     rizzMotor.configFactoryDefault();

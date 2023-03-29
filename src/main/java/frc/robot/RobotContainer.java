@@ -147,18 +147,13 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    //Devil Horns Button Bindings
+    //Devil Horns Button Bindings         
+    // Test this to make sure  
+    new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RunCommand(() -> devilHorn.dropForks(operatorJoystick.getRawButton(JoystickConstants.BACK_BUTTON)), devilHorn));
+    
     new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
                                                                       .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
                                             
-    new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.dropForks(true), devilHorn)))
-                                                                      .onFalse(new RunCommand(() -> devilHorn.dropForks(false), devilHorn));
-    
-    new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
-                                                                      .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
-                                            
-    new JoystickButton(operatorJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.dropForks(true), devilHorn)))
-                                                                      .onFalse(new RunCommand(() -> devilHorn.dropForks(false), devilHorn));
 
     //Driver Controller Button Bindings
     //Intake

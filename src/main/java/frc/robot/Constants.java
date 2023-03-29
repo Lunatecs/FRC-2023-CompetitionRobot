@@ -117,7 +117,7 @@ public final class Constants {
 
   public final static class DevilHornConstants {
     public final static int FORK_MOTOR = 0; //TODO: Update fork motor CAN values
-    public final static int DROP_MOTOR = 0;
+    public final static int DROP_SERVO = 0;
   }
 
 }
