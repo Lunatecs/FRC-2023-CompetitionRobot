@@ -23,8 +23,9 @@ public class AutoAprilTagMoveCommand extends CommandBase {
   private double maxSpeed = 0.6;
   private double minSpeed = 0.20;
   private int aprilTagID;
+  private double[] limelightData = new double[6]; 
 
-  public AutoAprilTagMoveCommand(DrivetrainSubsystem drivetrain, LimelightSubsystem limelight, PIDController speedController, PIDController rotationController, double txTarget, double tyTarget, int aprilTagID) {
+  public AutoAprilTagMoveCommand(DrivetrainSubsystem drivetrain, LimelightSubsystem limelight, PIDController speedController, PIDController rotationController, double distance) {
     this.drivetrain = drivetrain;
     this.limelight = limelight;
     this.speedController = speedController;
@@ -33,7 +34,7 @@ public class AutoAprilTagMoveCommand extends CommandBase {
     this.tyTarget = tyTarget;
     this.aprilTagID = aprilTagID;
 
-    NetworkTableInstance.getDefault().getTable("Limelight").getEntry("targetpos_robotspace").getDoubleArray(new double[3]);
+    NetworkTableInstance.getDefault().getTable("Limelight").getEntry("targetpos_robotspace").getDoubleArray(new double[6]);
     addRequirements(drivetrain, limelight);
   }
 
