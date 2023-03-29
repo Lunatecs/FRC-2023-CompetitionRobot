@@ -92,6 +92,8 @@ public final class Constants {
     public final static double CONE_SETPOINT = 24000;
     public final static double GROUND_INTAKE_CONE = 40000;
     public final static double GROUND_INTAKE_CUBE = 47000; 
+    public final static double LAUNCH_CUBE = 30000;
+    public final static double STOP_LAUNCH = 17000;
     //These will be made for cones, but it is likely that cubes will require a seperate constant.
     //public final static double STATION_INTAKE = ;
   }
@@ -117,7 +119,7 @@ public final class Constants {
 
   public final static class DevilHornConstants {
     public final static int FORK_MOTOR = 0; //TODO: Update fork motor CAN values
-    public final static int DROP_MOTOR = 0;
+    public final static int DROP_SERVO = 0;
   }
 
 }

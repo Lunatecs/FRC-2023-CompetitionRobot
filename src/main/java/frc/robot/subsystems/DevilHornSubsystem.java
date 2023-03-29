@@ -9,20 +9,20 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DevilHornConstants;
 
 public class DevilHornSubsystem extends SubsystemBase {
   
   private final WPI_TalonFX forkMotor = new WPI_TalonFX(DevilHornConstants.FORK_MOTOR);
-  private final WPI_TalonSRX dropMotor = new WPI_TalonSRX(DevilHornConstants.DROP_MOTOR);
+  private final Servo dropServo = new Servo(DevilHornConstants.DROP_SERVO);
 
   public DevilHornSubsystem() {
     forkMotor.configFactoryDefault();
-    dropMotor.configFactoryDefault();
     resetEncoders();
     forkMotor.setNeutralMode(NeutralMode.Brake);
-    dropMotor.setNeutralMode(NeutralMode.Brake);
+    dropServo.set(0);
   }
 
   public void setForkSpeed(double speed) {
@@ -30,10 +30,9 @@ public class DevilHornSubsystem extends SubsystemBase {
   }
 
   public void dropForks(boolean drop) {
-    if(drop) {
-      dropMotor.set(ControlMode.PercentOutput, 1);
-    } else {
-      dropMotor.set(ControlMode.PercentOutput, 0);
+    if (drop) {
+      System.out.println("Forks Drop");
+      dropServo.set(1);
     }
   }
 

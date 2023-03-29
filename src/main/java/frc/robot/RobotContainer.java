@@ -22,6 +22,7 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.AutoDeliverConeTopCommand;
 import frc.robot.commands.AutoDeliverTwoGamePiece;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LaunchCubeCommand;
 import frc.robot.commands.LockArmCommand;
 import frc.robot.commands.LockElevatorCommand;
 import frc.robot.commands.LooneyDriveCommand;
@@ -147,18 +148,13 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    //Devil Horns Button Bindings
+    //Devil Horns Button Bindings         
+    // Test this to make sure  
+    new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RunCommand(() -> devilHorn.dropForks(operatorJoystick.getRawButton(JoystickConstants.BACK_BUTTON)), devilHorn));
+    
     new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
                                                                       .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
                                             
-    new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.dropForks(true), devilHorn)))
-                                                                      .onFalse(new RunCommand(() -> devilHorn.dropForks(false), devilHorn));
-    
-    new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
-                                                                      .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
-                                            
-    new JoystickButton(operatorJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.dropForks(true), devilHorn)))
-                                                                      .onFalse(new RunCommand(() -> devilHorn.dropForks(false), devilHorn));
 
     //Driver Controller Button Bindings
     //Intake
@@ -198,6 +194,8 @@ public class RobotContainer {
     
     new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator, wrist)); 
 
+    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).onTrue(new LaunchCubeCommand(wrist, intake, elevator, arm));
+
     //Manual Arm Buttons
     /*
     new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm))
@@ -227,6 +225,10 @@ public class RobotContainer {
     new JoystickButton(driverJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.GROUND_INTAKE_CUBE));
     
     new JoystickButton(driverJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.WRIST_HOME));
+
+
+
+    
   
     //LED Controls
     new JoystickButton(operatorJoystick, JoystickConstants.RIGHT_BUMPER).onTrue(new RunCommand(() -> {
