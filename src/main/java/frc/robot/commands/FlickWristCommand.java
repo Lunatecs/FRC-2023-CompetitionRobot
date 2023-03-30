@@ -15,6 +15,8 @@ public class FlickWristCommand extends CommandBase {
   private boolean finished;
   /** Creates a new FlickWristCommand. */
   public FlickWristCommand(WristSubsystem wrist, IntakeSubsystem intake) {
+    this.wrist = wrist;
+    this.intake = intake;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(wrist);
@@ -30,11 +32,11 @@ public class FlickWristCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.turnWrist(-0.5);
-    if (wrist.getWristEncoder() < WristConstants.LAUNCH_CUBE) {
+    wrist.turnWrist(0.9);
+    if (wrist.getWristEncoder() > WristConstants.LAUNCH_CUBE) {
       intake.runIntake(1.0);
     }
-    if (wrist.getWristEncoder() < WristConstants.STOP_LAUNCH) {
+    if (wrist.getWristEncoder() > WristConstants.CONE_SETPOINT) {
       wrist.turnWrist(0);
       intake.runIntake(0);
       finished = true;

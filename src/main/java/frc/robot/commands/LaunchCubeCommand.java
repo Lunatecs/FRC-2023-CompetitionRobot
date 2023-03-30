@@ -22,7 +22,6 @@ public class LaunchCubeCommand extends SequentialCommandGroup {
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
       new SetEndableElevatorPositionCommand(elevator, ElevatorConstants.MID_HEIGHT, 0.00006),
-      new SetWristAngleCommand(wrist, WristConstants.GROUND_INTAKE_CUBE),
       new FlickWristCommand(wrist, intake),
       new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.BOTTOM, WristConstants.WRIST_HOME, 0.00004)
     );
