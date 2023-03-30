@@ -43,7 +43,7 @@ public class AutoTwoPieceAprilTag extends SequentialCommandGroup {
       new AutoTurnCommand(drive, 150, 0.05),
       //new AutoMoveCommand(174, drive, 0.6, 0.25),
 
-      new AutoAprilTagMoveCommand(drive, limelight, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), 0, 156, 0)
+      new AutoAprilTagMoveCommand(drive, limelight, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), 0, 156, 3)
       /* 
       new SetEndableElevatorPositionCommand(elevator, ElevatorConstants.MAX_HEIGHT, 0.00006),
       new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm),
