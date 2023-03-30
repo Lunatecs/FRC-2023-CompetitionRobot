@@ -11,6 +11,7 @@ import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.utils.LimelightHelpers;
 
 public class AutoAprilTagMoveCommand extends CommandBase {
   /** Creates a new AutoAprilTagMoveCommand. */
@@ -19,40 +20,39 @@ public class AutoAprilTagMoveCommand extends CommandBase {
   private DrivetrainSubsystem drivetrain;
   private LimelightSubsystem limelight;
   private double txTarget;
-  private double tyTarget;
+  private double distance;
   private double maxSpeed = 0.6;
   private double minSpeed = 0.20;
-  private int aprilTagID;
-  private double[] limelightData = new double[6]; 
+  private int pipeline;
 
-  public AutoAprilTagMoveCommand(DrivetrainSubsystem drivetrain, LimelightSubsystem limelight, PIDController speedController, PIDController rotationController, double distance) {
+  public AutoAprilTagMoveCommand(DrivetrainSubsystem drivetrain, LimelightSubsystem limelight, PIDController speedController, PIDController rotationController, double txTarget, double distance, int pipeline) {
     this.drivetrain = drivetrain;
     this.limelight = limelight;
     this.speedController = speedController;
     this.rotationController = rotationController;
     this.txTarget = txTarget;
-    this.tyTarget = tyTarget;
-    this.aprilTagID = aprilTagID;
+    this.distance = distance;
+    this.pipeline = pipeline;
 
-    NetworkTableInstance.getDefault().getTable("Limelight").getEntry("targetpos_robotspace").getDoubleArray(new double[6]);
+    
     addRequirements(drivetrain, limelight);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    limelight.setPipeline(LimelightConstants.APRILTAG_PIPELINE);
-    speedController.setSetpoint(tyTarget*DrivetrainConstants.TICKS_PER_INCH);
+    limelight.setPipeline(pipeline);
+    speedController.setSetpoint(distance*DrivetrainConstants.INCHES_TO_METERS);
     rotationController.setSetpoint(txTarget);
-    speedController.setTolerance(15000);
+    speedController.setTolerance(1500);
     drivetrain.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = speedController.calculate((drivetrain.getLeftDistance() + drivetrain.getRightDistance()) / 2.0 );
-     double rotation = rotationController.calculate(tyTarget); 
+    double speed = speedController.calculate(limelight.getTX());
+     double rotation = rotationController.calculate(limelight.getTY()); 
 
      if(Math.abs(speed) > maxSpeed){
       speed = Math.abs((speed)/speed) * maxSpeed;
@@ -73,6 +73,6 @@ public class AutoAprilTagMoveCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return speedController.atSetpoint();
   }
 }

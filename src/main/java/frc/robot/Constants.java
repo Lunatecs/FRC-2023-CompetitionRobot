@@ -26,6 +26,7 @@ public final class Constants {
     public final static double GEAR_RATIO = 10;
     public final static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
     public final static double TICKS_PER_INCH = (TICKS*GEAR_RATIO)/WHEEL_CIRCUMFERENCE; 
+    public final static double INCHES_TO_METERS = 0.0254;
 
    /* 
   public static class OperatorConstants {
