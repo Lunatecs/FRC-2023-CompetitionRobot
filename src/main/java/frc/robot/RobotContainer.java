@@ -10,6 +10,7 @@ import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.WristConstants;
 import frc.robot.commands.ArcadeDriveCommand;
+import frc.robot.commands.AutoAprilTagMoveCommand;
 import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutoChargingStation;
 import frc.robot.commands.AutoDeliverConeAndBalaceCommand;
@@ -117,6 +118,7 @@ public class RobotContainer {
     autoChooser.addOption("Automotive Rotation", new SequentialCommandGroup(new InstantCommand(() -> drivetrain.resetPigeon()), new AutoTurnCommand(drivetrain, 155, 0.005)));
     autoChooser.addOption("Two Game Piece :O", new AutoDeliverTwoGamePiece(elevator, intake, drivetrain, arm, wrist));
     autoChooser.addOption("Drive Forward + Gyro Correction", new AutoMoveStraightCommand(drivetrain, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -174));
+    autoChooser.addOption("AutoAprilTagMove", new AutoAprilTagMoveCommand(drivetrain, limelight, new PIDController(0.01, 0, 0), new PIDController(0.01, 0, 0), 0, 0, 3));
     SmartDashboard.putData(autoChooser);
   }
 
