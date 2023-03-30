@@ -19,6 +19,7 @@ import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.AutoMoveStraightCommand;
 import frc.robot.commands.AutoSchmooveCommand;
 import frc.robot.commands.AutoTurnCommand;
+import frc.robot.commands.AutoTwoPieceAprilTag;
 import frc.robot.commands.Autos;
 import frc.robot.commands.AutoDeliverConeTopCommand;
 import frc.robot.commands.AutoDeliverTwoGamePiece;
@@ -119,6 +120,7 @@ public class RobotContainer {
     autoChooser.addOption("Two Game Piece :O", new AutoDeliverTwoGamePiece(elevator, intake, drivetrain, arm, wrist));
     autoChooser.addOption("Drive Forward + Gyro Correction", new AutoMoveStraightCommand(drivetrain, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -174));
     autoChooser.addOption("AutoAprilTagMove", new AutoAprilTagMoveCommand(drivetrain, limelight, new PIDController(0.01, 0, 0), new PIDController(0.01, 0, 0), 0, 0, 3));
+    autoChooser.addOption("two piece auto + april tags", new AutoTwoPieceAprilTag(elevator, intake, drivetrain, arm, wrist, limelight));
     SmartDashboard.putData(autoChooser);
   }
 
