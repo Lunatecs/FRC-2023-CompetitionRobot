@@ -15,6 +15,7 @@ import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.AutoChargingStation;
 import frc.robot.commands.AutoDeliverConeAndBalaceCommand;
 import frc.robot.commands.AutoDeliverConeAndDrive;
+import frc.robot.commands.AutoDeliverConeCommunityBalance;
 import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.AutoMoveStraightCommand;
 import frc.robot.commands.AutoSchmooveCommand;
@@ -114,6 +115,7 @@ public class RobotContainer {
     autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
     autoChooser.addOption("Deliver Cone Top", new AutoDeliverConeTopCommand(elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Top Cone, Exit Community, and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone Exit Community Turn 180 and Balance", new AutoDeliverConeCommunityBalance(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Top Cone and Balance", new AutoDeliverConeAndBalaceCommand(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Cone and Drive Forward", new AutoDeliverConeAndDrive(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Automotive Rotation", new SequentialCommandGroup(new InstantCommand(() -> drivetrain.resetPigeon()), new AutoTurnCommand(drivetrain, 155, 0.005)));
