@@ -16,6 +16,7 @@ import frc.robot.commands.AutoChargingStation;
 import frc.robot.commands.AutoDeliverConeAndBalaceCommand;
 import frc.robot.commands.AutoDeliverConeAndDrive;
 import frc.robot.commands.AutoDeliverConeCommunityBalance;
+import frc.robot.commands.AutoDeliverConeLoopBalance;
 import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.AutoMoveStraightCommand;
 import frc.robot.commands.AutoSchmooveCommand;
@@ -123,6 +124,7 @@ public class RobotContainer {
     autoChooser.addOption("Drive Forward + Gyro Correction", new AutoMoveStraightCommand(drivetrain, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -174));
     autoChooser.addOption("AutoAprilTagMove", new AutoAprilTagMoveCommand(drivetrain, limelight, new PIDController(0.01, 0, 0), new PIDController(0.01, 0, 0), 0, 0, 3));
     autoChooser.addOption("two piece auto + april tags", new AutoTwoPieceAprilTag(elevator, intake, drivetrain, arm, wrist, limelight));
+    autoChooser.addOption("Deliver cone Top and Balance Loop", new AutoDeliverConeLoopBalance(drivetrain, elevator, arm, wrist, intake));
     SmartDashboard.putData(autoChooser);
   }
 
@@ -156,10 +158,12 @@ public class RobotContainer {
 
     //Devil Horns Button Bindings         
     // Test this to make sure  
-    new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RunCommand(() -> devilHorn.dropForks(operatorJoystick.getRawButton(JoystickConstants.BACK_BUTTON)), devilHorn));
+    new JoystickButton(operatorJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RunCommand(() -> devilHorn.dropForks(true), devilHorn));
     
     new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
                                                                       .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
+
+    new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new RunCommand(() -> devilHorn.resetForkServo(), devilHorn));
                                             
 
     //Driver Controller Button Bindings

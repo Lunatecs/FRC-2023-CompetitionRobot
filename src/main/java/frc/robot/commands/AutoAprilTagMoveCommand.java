@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.LimelightConstants;
@@ -42,7 +43,7 @@ public class AutoAprilTagMoveCommand extends CommandBase {
   @Override
   public void initialize() {
     limelight.setPipeline(pipeline);
-    speedController.setSetpoint(distance*DrivetrainConstants.INCHES_TO_METERS);
+    speedController.setSetpoint(distance*DrivetrainConstants.TICKS_PER_INCH);
     rotationController.setSetpoint(txTarget);
     speedController.setTolerance(1500);
     drivetrain.resetEncoders();
@@ -51,24 +52,32 @@ public class AutoAprilTagMoveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = speedController.calculate(limelight.getTX());
-     double rotation = rotationController.calculate(limelight.getTY()); 
+    double speed = speedController.calculate(limelight.getTZ()*DrivetrainConstants.METERS_TO_INCHES*DrivetrainConstants.TICKS_PER_INCH);
+    double rotation = rotationController.calculate(limelight.getTX()); 
 
-     if(Math.abs(speed) > maxSpeed){
+    if(Math.abs(speed) > maxSpeed){
       speed = Math.abs((speed)/speed) * maxSpeed;
-     }
-     if(Math.abs(speed) < minSpeed){
+    }
+      
+    if(Math.abs(speed) < minSpeed){
       speed = Math.abs((speed)/speed) * minSpeed;
-     }
+    }
 
-     drivetrain.curvatureDrive(speed, rotation, true );
+    drivetrain.curvatureDrive(speed, rotation, false);
+
+    SmartDashboard.putNumber("April Tag Auto Distance Error", speedController.getPositionError());
+    SmartDashboard.putNumber("April Tag Auto Speed Output", speed);
+    SmartDashboard.putNumber("April Tag Auto Rotation Error", rotationController.getPositionError());
+    SmartDashboard.putNumber("April Tag Auto Rotation Output", rotation);
   }
 
      
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    drivetrain.curvatureDrive(0, 0, false);
+  }
 
   // Returns true when the command should end.
   @Override
