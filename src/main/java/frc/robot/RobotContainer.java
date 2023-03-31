@@ -112,19 +112,19 @@ public class RobotContainer {
 
   public void configureAutos() {
     autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
-    autoChooser.addOption("Move Forward", new AutoMoveCommand(145, drivetrain, 0.5, 0.25));
-    autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
-    autoChooser.addOption("Deliver Cone Top", new AutoDeliverConeTopCommand(elevator, arm, wrist, intake));
-    autoChooser.addOption("Deliver Top Cone, Exit Community, and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
-    autoChooser.addOption("Deliver Top Cone Exit Community Turn 180 and Balance", new AutoDeliverConeCommunityBalance(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Top Cone and Balance", new AutoDeliverConeAndBalaceCommand(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Cone and Drive Forward", new AutoDeliverConeAndDrive(drivetrain, elevator, arm, wrist, intake));
-    autoChooser.addOption("Automotive Rotation", new SequentialCommandGroup(new InstantCommand(() -> drivetrain.resetPigeon()), new AutoTurnCommand(drivetrain, 155, 0.005)));
+    //autoChooser.addOption("Automotive Rotation", new SequentialCommandGroup(new InstantCommand(() -> drivetrain.resetPigeon()), new AutoTurnCommand(drivetrain, 155, 0.005)));
     autoChooser.addOption("Two Game Piece :O", new AutoDeliverTwoGamePiece(elevator, intake, drivetrain, arm, wrist));
-    autoChooser.addOption("Drive Forward + Gyro Correction", new AutoMoveStraightCommand(drivetrain, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -174));
-    autoChooser.addOption("AutoAprilTagMove", new AutoAprilTagMoveCommand(drivetrain, limelight, new PIDController(0.01, 0, 0), new PIDController(0.01, 0, 0), 0, 0, 3));
-    autoChooser.addOption("two piece auto + april tags", new AutoTwoPieceAprilTag(elevator, intake, drivetrain, arm, wrist, limelight));
+    autoChooser.addOption("Move Forward", new AutoMoveCommand(145, drivetrain, 0.5, 0.25)); 
+    autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
+    autoChooser.addOption("Deliver Cone Top", new AutoDeliverConeTopCommand(elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone, Exit Community, and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));     
+    // autoChooser.addOption("Drive Forward + Gyro Correction", new AutoMoveStraightCommand(drivetrain, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -174));
+   // autoChooser.addOption("AutoAprilTagMove", new AutoAprilTagMoveCommand(drivetrain, limelight, new PIDController(0.01, 0, 0), new PIDController(0.01, 0, 0), 0, 0, 3));
+   // autoChooser.addOption("two piece auto + april tags", new AutoTwoPieceAprilTag(elevator, intake, drivetrain, arm, wrist, limelight));
     autoChooser.addOption("Deliver cone Top and Balance Loop", new AutoDeliverConeLoopBalance(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone Exit Community Turn 180 and Balance", new AutoDeliverConeCommunityBalance(drivetrain, elevator, arm, wrist, intake));
     SmartDashboard.putData(autoChooser);
   }
 
