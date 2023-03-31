@@ -4,57 +4,62 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-  private WPI_TalonSRX leftMotor = new WPI_TalonSRX(IntakeConstants.LEFT_MOTOR);
-  private WPI_TalonSRX rightMotor = new WPI_TalonSRX(IntakeConstants.RIGHT_MOTOR);
+ 
+  private WPI_TalonSRX intakeMotor = new WPI_TalonSRX(IntakeConstants.INTAKE_MOTOR);
 
-  private final DoubleSolenoid frontIntake = new DoubleSolenoid(
+  /*private final DoubleSolenoid frontIntake = new DoubleSolenoid(
     PneumaticsModuleType.REVPH, 
     IntakeConstants.FORWARD_CHANNEL, 
-    IntakeConstants.REVERSE_CHANNEL);
+    IntakeConstants.REVERSE_CHANNEL);*/
 
   public IntakeSubsystem() {
-    leftMotor.configFactoryDefault();
-    rightMotor.configFactoryDefault();
-    
-    leftMotor.setInverted(true);
-    rightMotor.setInverted(false);// does this need to be here?
+    intakeMotor.configFactoryDefault();
 
-    leftMotor.setNeutralMode(NeutralMode.Brake);
-    rightMotor.setNeutralMode(NeutralMode.Brake);
-
-    rightMotor.follow(leftMotor);
-
-    frontIntake.set(DoubleSolenoid.Value.kReverse);
+    intakeMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("Trip Limit Reached", tripLimit());
+    SmartDashboard.putNumber("intake motor current", getStatorCurrent());
   }
-  // ConeIntake is the narrow position of the intake used to grip onto cones
-  //public void ConeIntake(){}
-  // CubeIntake is the wide position of the intake used to grip onto cubes
-  //public void CubeIntake(){}
+  
 
-  public void intakeOpen(){
+
+  // The intakeOpen() and intakeClose() methods are designed for Seth's intake
+  /*public void intakeOpen(){
     this.frontIntake.set(DoubleSolenoid.Value.kForward);
   }
 
   public void intakeClose(){
     this.frontIntake.set(DoubleSolenoid.Value.kReverse);
-  }
+  }*/
 
   public void runIntake(double intakeSpeed) {
-    leftMotor.set(intakeSpeed);
+    if(tripLimit()){
+      intakeMotor.set(ControlMode.PercentOutput, 0);
+    }else {
+      intakeMotor.set(ControlMode.PercentOutput, intakeSpeed);
+    }
+  }
+
+  public double getStatorCurrent() {
+    return intakeMotor.getStatorCurrent();
+  }
+
+  public boolean tripLimit() {
+    if(Math.abs(getStatorCurrent()) > 70) {
+      return true;
+    }
+    return false;
   }
 }

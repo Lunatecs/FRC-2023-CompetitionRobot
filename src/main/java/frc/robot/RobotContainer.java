@@ -4,25 +4,68 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DevilHornConstants;
+import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Constants.JoystickConstants;
+import frc.robot.Constants.WristConstants;
 import frc.robot.commands.ArcadeDriveCommand;
-//import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoAprilTagMoveCommand;
+import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.AutoChargingStation;
+import frc.robot.commands.AutoDeliverConeAndBalaceCommand;
+import frc.robot.commands.AutoDeliverConeAndDrive;
+import frc.robot.commands.AutoMoveCommand;
+import frc.robot.commands.AutoMoveStraightCommand;
+import frc.robot.commands.AutoSchmooveCommand;
+import frc.robot.commands.AutoTurnCommand;
+import frc.robot.commands.AutoTwoPieceAprilTag;
 import frc.robot.commands.Autos;
+import frc.robot.commands.AutoDeliverConeTopCommand;
+import frc.robot.commands.AutoDeliverTwoGamePiece;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LaunchCubeCommand;
+import frc.robot.commands.LockArmCommand;
+import frc.robot.commands.LockElevatorCommand;
 import frc.robot.commands.LooneyDriveCommand;
+import frc.robot.commands.RunIntakeCommand;
+import frc.robot.commands.SetArmExtensionCommand;
+import frc.robot.commands.SetElevatorPositionCommand;
+import frc.robot.commands.SetOtherLevelsCommand;
+import frc.robot.commands.SetTopLevelCommand;
+import frc.robot.commands.SetWristAngleAndLockCommand;
+import frc.robot.commands.SetWristAngleCommand;
+import frc.robot.commands.WristBrakeCommand;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.DevilHornSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.WristSubsystem;
+import frc.robot.utils.SetPointSupplier;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -32,16 +75,25 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final DrivetrainSubsystem drivetrainSubsystem = new DrivetrainSubsystem();
-  private final ElevatorSubsystem elevatorSubsystem = new ElevatorSubsystem();
+  private final DrivetrainSubsystem drivetrain = new DrivetrainSubsystem();
+  private final ElevatorSubsystem elevator = new ElevatorSubsystem();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final IntakeSubsystem intakesubsystem = new IntakeSubsystem();
-
-
+  private final IntakeSubsystem intake = new IntakeSubsystem();
+  private final WristSubsystem wrist = new WristSubsystem();
+  private final ArmSubsystem arm = new ArmSubsystem();
+  private final LEDSubsystem led = LEDSubsystem.getInstance();
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
+  private final DevilHornSubsystem devilHorn = new DevilHornSubsystem();
 
 
   private final Joystick driverJoystick = new Joystick(Constants.JoystickConstants.DRIVER_USB);
   private final Joystick operatorJoystick = new Joystick(Constants.JoystickConstants.OPERATOR_USB);
+  private final Joystick testJoystick = new Joystick(JoystickConstants.TEST_USB);
+
+  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+
+  private SetPointSupplier elevatorSetpoint = new SetPointSupplier();
+  boolean isCone = false;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   //private final CommandXboxController m_driverController =
@@ -52,15 +104,37 @@ public class RobotContainer {
     // Configure the trigger bindings
     configureBindings();
     configureDefaultCommands();
+    configureAutos();
     //CameraServer.startAutomaticCapture();
   }
 
+  public void configureAutos() {
+    autoChooser.setDefaultOption("Do Nothing", new InstantCommand());
+    autoChooser.addOption("Move Forward", new AutoMoveCommand(145, drivetrain, 0.5, 0.25));
+    autoChooser.addOption("Auto Charge Station", new AutoChargingStation(drivetrain));
+    autoChooser.addOption("Deliver Cone Top", new AutoDeliverConeTopCommand(elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone, Exit Community, and Balance", new AutoSchmooveCommand(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Top Cone and Balance", new AutoDeliverConeAndBalaceCommand(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Deliver Cone and Drive Forward", new AutoDeliverConeAndDrive(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Automotive Rotation", new SequentialCommandGroup(new InstantCommand(() -> drivetrain.resetPigeon()), new AutoTurnCommand(drivetrain, 155, 0.005)));
+    autoChooser.addOption("Two Game Piece :O", new AutoDeliverTwoGamePiece(elevator, intake, drivetrain, arm, wrist));
+    autoChooser.addOption("Drive Forward + Gyro Correction", new AutoMoveStraightCommand(drivetrain, new PIDController(0.0005, 0.0, 0.0), new PIDController(0.05, 0.0, 0.0), -174));
+    autoChooser.addOption("AutoAprilTagMove", new AutoAprilTagMoveCommand(drivetrain, limelight, new PIDController(0.01, 0, 0), new PIDController(0.01, 0, 0), 0, 0, 3));
+    autoChooser.addOption("two piece auto + april tags", new AutoTwoPieceAprilTag(elevator, intake, drivetrain, arm, wrist, limelight));
+    SmartDashboard.putData(autoChooser);
+  }
 
   public void configureDefaultCommands() {
     // add keybinds for turnInPlace, fast, and reverse
-    drivetrainSubsystem.setDefaultCommand(new LooneyDriveCommand(drivetrainSubsystem,
+    drivetrain.setDefaultCommand(new LooneyDriveCommand(drivetrain,
     () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.LEFT_Y_AXIS);}, 
-    () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, () -> {return false;}, () -> {return false;}, () -> {return false;}));
+    () -> {return driverJoystick.getRawAxis(Constants.JoystickConstants.RIGHT_X_AXIS);}, 
+    () -> driverJoystick.getRawButton(JoystickConstants.RIGHT_BUMPER), 
+    () -> driverJoystick.getRawButton(JoystickConstants.LEFT_BUMPER)));
+    intake.setDefaultCommand(new RunCommand(() -> intake.runIntake(-0.2), intake));
+    arm.setDefaultCommand(new LockArmCommand(arm, new SetPointSupplier()));
+    //led.setDefaultCommand(new ToggleLED(led));
+    //wrist.setDefaultCommand(new WristBrakeCommand(new SetPointSupplier(), wrist));
   }
 
   /**
@@ -73,24 +147,106 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(.5), elevatorSubsystem))
-                                                                              .onFalse(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(0), elevatorSubsystem));
+    //Devil Horns Button Bindings         
+    // Test this to make sure  
+    new JoystickButton(driverJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RunCommand(() -> devilHorn.dropForks(operatorJoystick.getRawButton(JoystickConstants.BACK_BUTTON)), devilHorn));
     
-    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(-0.5), elevatorSubsystem))
-                                                                              .onFalse(new RunCommand(() -> elevatorSubsystem.setElevatorSpeed(0), elevatorSubsystem));
+    new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
+                                                                      .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
+                                            
+
+    //Driver Controller Button Bindings
+    //Intake
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER)) > 0.1;}).onTrue(new RunIntakeCommand(() -> -driverJoystick.getRawAxis(JoystickConstants.RIGHT_TRIGGER), intake))
+                                                                                                           .onFalse(new InstantCommand(() -> {}, intake));
+
+    new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new ParallelCommandGroup(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake), 
+                                                                                                                  new RunCommand(() -> led.removeColorBack(led.PICKED_UP))))
+                                                                                                          .onFalse(new InstantCommand(() -> {}, intake));
+    new POVButton(driverJoystick, JoystickConstants.POV_DOWN).onTrue(new RunIntakeCommand(() -> 0.3, intake))
+                                                              .onFalse(new InstantCommand(() -> {}, intake));
+
+    new POVButton(driverJoystick, JoystickConstants.POV_UP).onTrue(new RunIntakeCommand(() -> 0.5, intake))
+                                                              .onFalse(new InstantCommand(() -> {}, intake));
+
+    //Auto Balance Button.
+    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new AutoBalanceCommand(drivetrain))
+                                                                    .onFalse(new InstantCommand(() -> {}, drivetrain));
+
+    
+    //Manual Elevator Buttons
+    
+    new POVButton(operatorJoystick, JoystickConstants.POV_UP).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setSpeed(-0.5), elevator)))
+                                                                              .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator));
+    
+    new POVButton(operatorJoystick, JoystickConstants.POV_DOWN).whileTrue(new RepeatCommand(new RunCommand(() -> elevator.setSpeed(0.5), elevator)))
+                                                                              .onFalse(new RunCommand(() -> elevator.lockElevator(), elevator)); 
+
+    //Elevator Setpoints
+    new JoystickButton(operatorJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.BOTTOM, WristConstants.WRIST_HOME, 0.00004));
+                                                                        //.onFalse(new InstantCommand(() -> {}, elevator));
+
+    new JoystickButton(operatorJoystick, JoystickConstants.RED_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.STATION_HEIGHT, WristConstants.GROUND_INTAKE_CONE, 0.00006));
+
+    new JoystickButton(operatorJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetOtherLevelsCommand(elevator, arm, wrist, ElevatorConstants.MID_HEIGHT, WristConstants.CONE_SETPOINT, 0.00006));
+                                                                        //.onFalse(new InstantCommand(() -> {}, elevator));
+    
+    new JoystickButton(operatorJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetTopLevelCommand(arm, elevator, wrist)); 
+
+    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).onTrue(new LaunchCubeCommand(wrist, intake, elevator, arm));
+
+    //Manual Arm Buttons
+    /*
+    new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).whileTrue(new SetArmExtensionCommand(ArmConstants.MAX_EXTENSION, arm))
+                                                                      //.onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
+                                                                      .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
+    
+    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).whileTrue(new SetArmExtensionCommand(0, arm))
+                                                                     // .onFalse(new RunCommand(() -> arm.setManualSpeed(0), arm));
+                                                                     .onFalse(new RunCommand(() -> arm.setSpeed(0), arm));
+
+    //Setpoint Arm Buttons
+
+    new POVButton(operatorJoystick, JoystickConstants.POV_RIGHT).onTrue(new SetArmExtensionCommand(514, arm));
+
+    new POVButton(operatorJoystick, JoystickConstants.POV_LEFT).onTrue(new SetArmExtensionCommand(0, arm));
+     */
+    //Manual Wrist Control
+    new Trigger(() -> {return Math.abs(operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)) > 0.2;}).whileTrue(new RepeatCommand(new RunCommand(() -> wrist.turnWrist(.5*operatorJoystick.getRawAxis(JoystickConstants.LEFT_Y_AXIS)), wrist)))
+                                                                                                            //.onFalse(new RunCommand(() -> wrist.turnWrist(0), wrist));
+                                                                                                            .onFalse(new WristBrakeCommand(new SetPointSupplier(), wrist));
+    
+    new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new WristBrakeCommand(new SetPointSupplier(), wrist))
+                                                                        .onFalse(new InstantCommand(() -> {}, wrist));
+    //Setpoint Wrist Control
+    new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.GROUND_INTAKE_CONE));
+
+    new JoystickButton(driverJoystick, JoystickConstants.GREEN_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.GROUND_INTAKE_CUBE));
+    
+    new JoystickButton(driverJoystick, JoystickConstants.YELLOW_BUTTON).onTrue(new SetWristAngleAndLockCommand(wrist, WristConstants.WRIST_HOME));
+
+
+
     
   
-    new JoystickButton(driverJoystick, JoystickConstants.BLUE_BUTTON).onTrue(new RunCommand(() -> {intakesubsystem.runIntake(0.3); intakesubsystem.intakeClose();}, intakesubsystem))
-                                                                       .onFalse(new RunCommand(() -> {intakesubsystem.runIntake(0); intakesubsystem.intakeOpen();}, intakesubsystem));
-  
-    new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new RunCommand(() -> intakesubsystem.runIntake(0.3), intakesubsystem))
-                                                                      .onFalse(new RunCommand(() -> intakesubsystem.runIntake(0), intakesubsystem));
-                                                
-}
+    //LED Controls
+    new JoystickButton(operatorJoystick, JoystickConstants.RIGHT_BUMPER).onTrue(new RunCommand(() -> {
+                                                                                  led.removeColorFront(led.INTAKE_CONE);
+                                                                                  led.addColorFront(led.INTAKE_CUBE);
+                                                                                }, led))
+                                                                        .onFalse(new RunCommand(() -> led.removeColorFront(led.INTAKE_CUBE), led));
+
+    new JoystickButton(operatorJoystick, JoystickConstants.LEFT_BUMPER).onTrue(new RunCommand(() -> {
+                                                                                  led.removeColorFront(led.INTAKE_CUBE);
+                                                                                  led.addColorFront(led.INTAKE_CONE);
+                                                                                }, led))
+                                                                       .onFalse(new RunCommand(() -> led.removeColorFront(led.INTAKE_CONE), led));
+  }
 
 
 
@@ -101,6 +257,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    return autoChooser.getSelected();
   }
-}
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+

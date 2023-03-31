@@ -19,15 +19,14 @@ public final class Constants {
     public final static int RIGHT_FRONT = 3;
     public final static int RIGHT_BACK = 1;
 
-    public final static int PIGEON = 6;
-
-
-
-    public final static double WHEEL_DIAMETER = 0.1524;
-    public final static double TICKS = 2048.0;
-    public final static double GEAR_REDUCTION = 10;
+    public final static int PIGEON = 24; 
+    
+    public final static double WHEEL_DIAMETER = 6.0;
+    public final static double TICKS = 2048.0;// 1 rotation (6 inches)
+    public final static double GEAR_RATIO = 10;
     public final static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
-    public final static double METERS_PER_TICK = WHEEL_CIRCUMFERENCE / (TICKS * GEAR_REDUCTION);
+    public final static double TICKS_PER_INCH = (TICKS*GEAR_RATIO)/WHEEL_CIRCUMFERENCE; 
+    public final static double INCHES_TO_METERS = 0.0254;
 
    /* 
   public static class OperatorConstants {
@@ -37,27 +36,33 @@ public final class Constants {
   }
 
   public final static class IntakeConstants{
-    public final static int LEFT_MOTOR = 1; // TODO: Find Intake motor and solenoid CAN values
-    public final static int RIGHT_MOTOR = 1;
-
-    public final static int FORWARD_CHANNEL = 1;
-    public final static int REVERSE_CHANNEL = 1;
+    public final static int INTAKE_MOTOR = 9;
   }
 
   public final static class ElevatorConstants{
-    public final static int ELEVATOR_MOTOR = 1;
+    public final static int ELEVATOR_MOTOR = 5;
+    public static final int LIMIT_SWITCH = 9;
+    public static final double MAX_HEIGHT = -86000;//-95000;//-95000;//-98000;//-101000; //-182000 (old)
+    public static final double STATION_HEIGHT = -101000;
+    public static final double MID_HEIGHT = -53000;//-57000;//-60000;//-63000; //-135972 (old)
+    public static final double BOTTOM = -7000;
   }
 
   public final static class ArmConstants {
-    public final static int ARM_MOTOR = 0; // TODO: find the CAN id for arm motor and limit switch (once its attached)
-    public final static int LIMIT_SWITCH = 0;
+    public final static int ARM_MOTOR = 10; 
+    public final static int LIMIT_SWITCH = 8;
+    public final static double MAX_EXTENSION = 28918;
+    public final static double TOP_EXTENSION = 20781;
+    public final static double GROUND_EXTENSION = 10300;
+    public final static String Joe = "Joe mother";
+    public final static double ARM_TOLERANCE = 500;
   }
 
   public final static class JoystickConstants{
     
     public final static int DRIVER_USB = 0;
     public final static int OPERATOR_USB = 1;
-    
+    public final static int TEST_USB = 2;
     
     public final static int LEFT_Y_AXIS = 1;
     public final static int RIGHT_X_AXIS = 4;
@@ -74,6 +79,47 @@ public final class Constants {
     public final static int RIGHT_BUMPER = 6;
 
     public final static int BACK_BUTTON = 7;
-    public static final int START_BUTTON = 8;
+    public final static int START_BUTTON = 8;
+
+    public final static int POV_UP = 0;
+    public final static int POV_RIGHT = 90;
+    public final static int POV_DOWN = 180;
+    public final static int POV_LEFT = 270;
   }
+
+  public final static class WristConstants{
+    public final static int WRIST_MOTOR = 6;
+    public final static double WRIST_HOME = 5000;
+    public final static double CONE_SETPOINT = 24000;
+    public final static double GROUND_INTAKE_CONE = 40000;
+    public final static double GROUND_INTAKE_CUBE = 47000; 
+    public final static double LAUNCH_CUBE = 5000;
+    //These will be made for cones, but it is likely that cubes will require a seperate constant.
+    //public final static double STATION_INTAKE = ;
+  }
+
+  public final static class LEDConstants {
+    public final static int LED_FRONT = 0;
+    public final static int LED_BACK = 1;
+
+    public final static double STROBE_GOLD = -0.07;
+    public final static double STROBE_BLUE = -0.09;
+    public final static double FIRE_MED =  -0.59;
+    public final static double SOLID_GREEN = 0.75;// lighter green is .71
+    public final static double CONFETTI = -0.87;
+    public final static double SOLID_VIOLET = 0.91;
+    public final static double SOLID_WHITE = 0.93;
+
+  }
+
+  public final static class LimelightConstants {
+    public final static int APRILTAG_PIPELINE = 3; // change if needed
+    
+  }
+
+  public final static class DevilHornConstants {
+    public final static int FORK_MOTOR = 0; //TODO: Update fork motor CAN values
+    public final static int DROP_SERVO = 5;
+  }
+
 }
