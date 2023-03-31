@@ -27,6 +27,7 @@ public final class Constants {
     public final static double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
     public final static double TICKS_PER_INCH = (TICKS*GEAR_RATIO)/WHEEL_CIRCUMFERENCE; 
     public final static double INCHES_TO_METERS = 0.0254;
+    public final static double METERS_TO_INCHES = 39.37;
 
    /* 
   public static class OperatorConstants {
@@ -118,8 +119,8 @@ public final class Constants {
   }
 
   public final static class DevilHornConstants {
-    public final static int FORK_MOTOR = 0; //TODO: Update fork motor CAN values
-    public final static int DROP_SERVO = 5;
+    public final static int FORK_MOTOR = 13; //TODO: Update fork motor CAN values
+    public final static int DROP_SERVO = 3;
   }
 
 }
