@@ -12,12 +12,12 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoBalanceCommand extends PIDCommand {
+public class AutoBalanceSlowCommand extends PIDCommand {
   /** Creates a new AutoBalanceCommand. */
 
   private DrivetrainSubsystem drivetrain;
 
-  public AutoBalanceCommand(DrivetrainSubsystem drivetrain) {
+  public AutoBalanceSlowCommand(DrivetrainSubsystem drivetrain) {
     super(
         // The controller that the command will use
         new PIDController(0.165, 0.0165, 0.0),  //p=0.165
@@ -28,10 +28,11 @@ public class AutoBalanceCommand extends PIDCommand {
         // This uses the output
         output -> {
           // Use the output here
-          SmartDashboard.putNumber("Auto output", output);
-          if(Math.abs(output)>0.325) {
-            output = Math.signum(output) * 0.4;
+          SmartDashboard.putNumber("Auto Slow output", output);
+          if(Math.abs(output) > 0.3) {
+            output = Math.signum(output) * 0.3;
           }
+          SmartDashboard.putNumber("Auto Slow After output", output);
           drivetrain.arcadeDrive(-output, 0);
         });
     // Use addRequirements() here to declare subsystem dependencies.

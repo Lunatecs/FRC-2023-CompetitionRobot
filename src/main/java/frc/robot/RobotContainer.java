@@ -25,6 +25,7 @@ import frc.robot.commands.AutoTwoPieceAprilTag;
 import frc.robot.commands.Autos;
 import frc.robot.commands.AutoDeliverConeTopCommand;
 import frc.robot.commands.AutoDeliverTwoGamePiece;
+import frc.robot.commands.AutoDeliverTwoGamePieceReverse;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LaunchCubeCommand;
 import frc.robot.commands.LockArmCommand;
@@ -125,6 +126,7 @@ public class RobotContainer {
    // autoChooser.addOption("two piece auto + april tags", new AutoTwoPieceAprilTag(elevator, intake, drivetrain, arm, wrist, limelight));
     autoChooser.addOption("Deliver cone Top and Balance Loop", new AutoDeliverConeLoopBalance(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Top Cone Exit Community Turn 180 and Balance", new AutoDeliverConeCommunityBalance(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("Two Game Piece Auto Reverse (WOW!)", new AutoDeliverTwoGamePieceReverse(elevator, intake, drivetrain, arm, wrist));
     SmartDashboard.putData(autoChooser);
   }
 
@@ -158,9 +160,9 @@ public class RobotContainer {
 
     //Devil Horns Button Bindings         
     // Test this to make sure  
-    new JoystickButton(operatorJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RunCommand(() -> devilHorn.dropForks(true), devilHorn));
+    new JoystickButton(operatorJoystick, JoystickConstants.BACK_BUTTON).onTrue(new RunCommand(() -> devilHorn.dropForks(), devilHorn));
     
-    new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.5), devilHorn)))
+    new JoystickButton(driverJoystick, JoystickConstants.START_BUTTON).onTrue(new RepeatCommand(new RunCommand(() -> devilHorn.setForkSpeed(0.7), devilHorn)))
                                                                       .onFalse(new RunCommand(() -> devilHorn.setForkSpeed(0), devilHorn));
 
     new JoystickButton(operatorJoystick, JoystickConstants.START_BUTTON).onTrue(new RunCommand(() -> devilHorn.resetForkServo(), devilHorn));

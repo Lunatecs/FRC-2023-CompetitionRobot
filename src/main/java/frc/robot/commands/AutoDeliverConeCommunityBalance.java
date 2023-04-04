@@ -24,8 +24,9 @@ public class AutoDeliverConeCommunityBalance extends SequentialCommandGroup {
       new AutoDeliverConeTopCommand(elevator, arm, wrist, intake),
       new AutoMoveCommand(-146, drivetrain, .6, 0.25),
       new AutoTurnCommand(drivetrain, -180, 0.05),
-      new AutoMoveCommand(-59.5, drivetrain, .45, 0.25),
-      new AutoBalanceCommand(drivetrain)
+      new AutoMoveCommand(-54, drivetrain, .45, 0.25),
+      new AutoForwardUntilChangeInGyro(drivetrain),
+      new AutoBalanceSlowCommand(drivetrain)
     );
   }
 }

@@ -43,9 +43,9 @@ public final class Constants {
   public final static class ElevatorConstants{
     public final static int ELEVATOR_MOTOR = 5;
     public static final int LIMIT_SWITCH = 9;
-    public static final double MAX_HEIGHT = -86000;//-95000;//-95000;//-98000;//-101000; //-182000 (old)
+    public static final double MAX_HEIGHT = -87000;// -86000;//-95000;//-95000;//-98000;//-101000; //-182000 (old)
     public static final double STATION_HEIGHT = -101000;
-    public static final double MID_HEIGHT = -53000;//-57000;//-60000;//-63000; //-135972 (old)
+    public static final double MID_HEIGHT = -54000;//-53000;//-57000;//-60000;//-63000; //-135972 (old)
     public static final double BOTTOM = -7000;
   }
 
@@ -120,7 +120,7 @@ public final class Constants {
 
   public final static class DevilHornConstants {
     public final static int FORK_MOTOR = 13; //TODO: Update fork motor CAN values
-    public final static int DROP_SERVO = 3;
+    public final static int DROP_SERVO = 4;
   }
 
 }

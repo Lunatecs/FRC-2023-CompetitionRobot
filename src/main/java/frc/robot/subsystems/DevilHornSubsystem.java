@@ -22,23 +22,22 @@ public class DevilHornSubsystem extends SubsystemBase {
     forkMotor.configFactoryDefault();
     resetEncoders();
     forkMotor.setNeutralMode(NeutralMode.Brake);
-    dropServo.set(-1);
+    dropServo.setBounds(1.3, 1.8, 1.5, 1.2, 1.05);
   }
 
   public void setForkSpeed(double speed) {
     forkMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void dropForks(boolean drop) {
-    if (drop) {
+  public void dropForks() {
       System.out.println("Forks Drop");
-      dropServo.set(1);
-    }
+      dropServo.setSpeed(1.0);
   }
 
   public void resetForkServo() {
-    dropServo.set(-1);
+    dropServo.setSpeed(-1.0);
   }
+
 
   public void resetEncoders() {
     forkMotor.setSelectedSensorPosition(0.0);

@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -17,7 +18,8 @@ public class LimelightSubsystem extends SubsystemBase {
   SimpleWidget toggleLED;
 
   public LimelightSubsystem() {
-    CameraServer.startAutomaticCapture(0);
+    UsbCamera camera = CameraServer.startAutomaticCapture(0);
+    camera.setResolution(416, 240);
 
     toggleLED = Shuffleboard.getTab("Cameras")
                             .add("Limelight LED", false)
