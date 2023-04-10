@@ -20,7 +20,7 @@ public class AutoBalanceSlowCommand extends PIDCommand {
   public AutoBalanceSlowCommand(DrivetrainSubsystem drivetrain) {
     super(
         // The controller that the command will use
-        new PIDController(0.165, 0.0165, 0.0),  //p=0.165
+        new PIDController(0.17, 0.0165, 0.0),  //p=0.165
         // This should return the measurement
         () -> drivetrain.getPitch(),
         // This should return the setpoint (can also be a constant)
@@ -29,8 +29,8 @@ public class AutoBalanceSlowCommand extends PIDCommand {
         output -> {
           // Use the output here
           SmartDashboard.putNumber("Auto Slow output", output);
-          if(Math.abs(output) > 0.3) {
-            output = Math.signum(output) * 0.3;
+          if(Math.abs(output) > 0.325) {
+            output = Math.signum(output) * 0.325;
           }
           SmartDashboard.putNumber("Auto Slow After output", output);
           drivetrain.arcadeDrive(-output, 0);

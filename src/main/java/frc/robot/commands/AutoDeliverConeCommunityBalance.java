@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -21,12 +22,14 @@ public class AutoDeliverConeCommunityBalance extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new AutoDeliverConeTopCommand(elevator, arm, wrist, intake),
+      //new AutoDeliverConeTopCommand(elevator, arm, wrist, intake),
       new AutoMoveCommand(-146, drivetrain, .6, 0.25),
-      new AutoTurnCommand(drivetrain, -180, 0.05),
-      new AutoMoveCommand(-54, drivetrain, .45, 0.25),
+      new AutoTurnCommand(drivetrain, -176, 0.05),
+      new AutoMoveCommand(-59.5, drivetrain, .45, 0.25),
       new AutoForwardUntilChangeInGyro(drivetrain),
-      new AutoBalanceSlowCommand(drivetrain)
+      new WaitCommand(.25),
+      //new AutoBalanceSlowCommand(drivetrain)
+      new AutoScoochBalanceCommand(drivetrain)
     );
   }
 }

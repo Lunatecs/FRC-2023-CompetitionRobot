@@ -5,63 +5,50 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoTurnCommand extends PIDCommand {
+public class AutoTurnWithCurrentGyro extends PIDCommand {
+  /** Creates a new AutoTurnWithCurrentGyro. */
 
   private DrivetrainSubsystem drive;
-  /** Creates a new AutoTurnCommand. */
-  public AutoTurnCommand(DrivetrainSubsystem drive, double rotation, double p) {
+
+  public AutoTurnWithCurrentGyro(DrivetrainSubsystem drive, double rotation) {
     super(
         // The controller that the command will use
-        new PIDController(p, 0.0015, 0),
+        new PIDController(0.05, 0.0015, 0),
         // This should return the measurement
-        () ->  {
-          drive.resetPigeon();
-          return drive.getYaw(); 
-        },
+        () -> drive.getYaw(),
         // This should return the setpoint (can also be a constant)
         () -> rotation,
         // This uses the output
         output -> {
-          //drive.arcadeDrive(0, output);
-          if(Math.abs(output) > .5) {
-            output =  (output/Math.abs(output)) * .5;
+          // Use the output here
+          if(Math.abs(output) > .5){
+            output = (output/Math.abs(output)) * .5;
           }
-          drive.arcadeDrive(0, output);
-          SmartDashboard.putNumber("Yaw Output", output);
+          drive.curvatureDrive(0, output, true);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
     addRequirements(drive);
-    this.getController().setTolerance(2);
+    this.getController().setTolerance(1);
     this.drive = drive;
   }
 
   @Override
-  public void execute() {
-    
+
+  public void execute(){
     super.execute();
   }
-
-  @Override
-  public void initialize(){
-    drive.resetPigeon();
-    drive.setYawToZero();
-    super.initialize();
-  }
-
-  
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     boolean fin = Math.abs(this.getController().getPositionError()) <= this.getController().getPositionTolerance();
-    SmartDashboard.putBoolean("AutoTurn Finished", fin);
+
     return fin;
   }
 }

@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -19,6 +20,7 @@ public class AutoDeliverConeAndDrive extends SequentialCommandGroup {
   public AutoDeliverConeAndDrive(DrivetrainSubsystem drive, ElevatorSubsystem elevator, ArmSubsystem arm, WristSubsystem wrist, IntakeSubsystem intake) {
     addCommands(
       new AutoDeliverConeTopCommand(elevator, arm, wrist, intake),
+      //new WaitCommand(2),  //take out after qual 76
       new AutoMoveCommand(-150, drive, .6, 0.25)// untested
     );
 

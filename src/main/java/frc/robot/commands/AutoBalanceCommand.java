@@ -30,9 +30,9 @@ public class AutoBalanceCommand extends PIDCommand {
           // Use the output here
           SmartDashboard.putNumber("Auto output", output);
           if(Math.abs(output)>0.325) {
-            output = Math.signum(output) * 0.4;
+            output = Math.signum(output) * 0.325;
           }
-          drivetrain.arcadeDrive(-output, 0);
+          drivetrain.arcadeDrive(output, 0);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.

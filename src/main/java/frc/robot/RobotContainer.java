@@ -21,6 +21,7 @@ import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.AutoMoveStraightCommand;
 import frc.robot.commands.AutoSchmooveCommand;
 import frc.robot.commands.AutoTurnCommand;
+import frc.robot.commands.AutoTurnWithCurrentGyro;
 import frc.robot.commands.AutoTwoPieceAprilTag;
 import frc.robot.commands.Autos;
 import frc.robot.commands.AutoDeliverConeTopCommand;
@@ -176,11 +177,21 @@ public class RobotContainer {
     new Trigger(() -> {return Math.abs(driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER)) > 0.1;}).onTrue(new ParallelCommandGroup(new RunIntakeCommand(() -> driverJoystick.getRawAxis(JoystickConstants.LEFT_TRIGGER), intake), 
                                                                                                                   new RunCommand(() -> led.removeColorBack(led.PICKED_UP))))
                                                                                                           .onFalse(new InstantCommand(() -> {}, intake));
-    new POVButton(driverJoystick, JoystickConstants.POV_DOWN).onTrue(new RunIntakeCommand(() -> 0.3, intake))
+    
+    new POVButton(driverJoystick, JoystickConstants.POV_DOWN).onTrue(new ParallelCommandGroup(new RunIntakeCommand(() -> 0.3, intake),
+                                                                                              new RunCommand(() -> led.removeColorBack(led.PICKED_UP), led)))
                                                               .onFalse(new InstantCommand(() -> {}, intake));
 
-    new POVButton(driverJoystick, JoystickConstants.POV_UP).onTrue(new RunIntakeCommand(() -> 0.5, intake))
+    new POVButton(driverJoystick, JoystickConstants.POV_UP).onTrue(new ParallelCommandGroup(new RunIntakeCommand(() -> 0.5, intake),
+                                                                  new RunCommand(() -> led.removeColorBack(led.PICKED_UP), led)))
                                                               .onFalse(new InstantCommand(() -> {}, intake));
+
+
+
+    // auto 90 degree turn 
+   // new POVButton(driverJoystick, JoystickConstants.POV_LEFT).onTrue(new InstantCommand(() -> new AutoTurnWithCurrentGyro(drivetrain, -90)));                                                              
+                          
+ //   new POVButton(driverJoystick, JoystickConstants.POV_RIGHT).onTrue(new InstantCommand(() -> new AutoTurnWithCurrentGyro(drivetrain, 90)));                                                              
 
     //Auto Balance Button.
     new JoystickButton(driverJoystick, JoystickConstants.RED_BUTTON).onTrue(new AutoBalanceCommand(drivetrain))

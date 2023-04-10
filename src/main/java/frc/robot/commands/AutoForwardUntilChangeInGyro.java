@@ -12,12 +12,19 @@ public class AutoForwardUntilChangeInGyro extends CommandBase {
   DrivetrainSubsystem drivetrain;
   double gyroSetpoint = 0.0;
   boolean isFinished = false;
+  boolean inverse = false;
 
-  public AutoForwardUntilChangeInGyro(DrivetrainSubsystem drivetrain) {
+  public AutoForwardUntilChangeInGyro(DrivetrainSubsystem drivetrain, boolean inverse) {
     this.drivetrain = drivetrain;
     addRequirements(drivetrain);
+    this.inverse = inverse;
   }
   
+  public AutoForwardUntilChangeInGyro(DrivetrainSubsystem drivetrain) {
+    this.drivetrain = drivetrain;
+    this.inverse = false;
+    addRequirements(drivetrain);
+  }
 
   // Called when the command is initially scheduled.
   @Override
