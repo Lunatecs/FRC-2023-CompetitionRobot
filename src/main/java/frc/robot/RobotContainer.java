@@ -16,6 +16,7 @@ import frc.robot.commands.AutoChargingStation;
 import frc.robot.commands.AutoDeliverConeAndBalaceCommand;
 import frc.robot.commands.AutoDeliverConeAndDrive;
 import frc.robot.commands.AutoDeliverConeCommunityBalance;
+import frc.robot.commands.AutoDeliverConeCommunityNoTurnBalance;
 import frc.robot.commands.AutoDeliverConeLoopBalance;
 import frc.robot.commands.AutoMoveCommand;
 import frc.robot.commands.AutoMoveStraightCommand;
@@ -24,6 +25,7 @@ import frc.robot.commands.AutoTurnCommand;
 import frc.robot.commands.AutoTurnWithCurrentGyro;
 import frc.robot.commands.AutoTwoPieceAprilTag;
 import frc.robot.commands.Autos;
+import frc.robot.commands.BalanceStuff;
 import frc.robot.commands.AutoDeliverConeTopCommand;
 import frc.robot.commands.AutoDeliverTwoGamePiece;
 import frc.robot.commands.AutoDeliverTwoGamePieceReverse;
@@ -128,6 +130,8 @@ public class RobotContainer {
     autoChooser.addOption("Deliver cone Top and Balance Loop", new AutoDeliverConeLoopBalance(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Deliver Top Cone Exit Community Turn 180 and Balance", new AutoDeliverConeCommunityBalance(drivetrain, elevator, arm, wrist, intake));
     autoChooser.addOption("Two Game Piece Auto Reverse (WOW!)", new AutoDeliverTwoGamePieceReverse(elevator, intake, drivetrain, arm, wrist));
+    autoChooser.addOption("No turn community balance", new AutoDeliverConeCommunityNoTurnBalance(drivetrain, elevator, arm, wrist, intake));
+    autoChooser.addOption("No cone communty Balance", new BalanceStuff(drivetrain));
     SmartDashboard.putData(autoChooser);
   }
 
